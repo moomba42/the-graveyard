@@ -2,6 +2,7 @@ package com.finallion.graveyard.blocks;
 
 import com.finallion.graveyard.blockentities.UrnBlockEntity;
 import com.finallion.graveyard.init.TGTileEntities;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -38,15 +39,20 @@ import java.util.Random;
 
 
 public class UrnBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final MapCodec<UrnBlock> CODEC = simpleCodec(UrnBlock::new);
     public static final BooleanProperty WATERLOGGED;
     public static final DirectionProperty FACING;
     public static final BooleanProperty OPEN;
     private static final VoxelShape LARGE_URN = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 16.0D, 14.0D);
     private static final VoxelShape SMALL_URN = Block.box(3.0D, 0.0D, 3.0D, 13.0D, 10.0D, 13.0D);
 
-    public UrnBlock() {
-        super(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).strength(0.3F));
+    public UrnBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false).setValue(OPEN, false));
+    }
+
+    public UrnBlock() {
+        this(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.METAL).strength(0.3F));
     }
 
     @Override
@@ -121,6 +127,11 @@ public class UrnBlock extends BaseEntityBlock implements SimpleWaterloggedBlock 
             ((UrnBlockEntity)blockentity).recheckOpen();
         }
 
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     public RenderShape getRenderShape(BlockState p_49090_) {

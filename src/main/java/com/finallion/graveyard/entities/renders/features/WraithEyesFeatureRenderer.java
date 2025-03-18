@@ -35,7 +35,7 @@ public class WraithEyesFeatureRenderer extends GeoRenderLayer<WraithEntity> {
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF
         );
     }
 

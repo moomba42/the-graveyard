@@ -36,7 +36,7 @@ public class RevenantEyesFeatureRenderer extends GeoRenderLayer<RevenantEntity> 
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF
         );
     }
 

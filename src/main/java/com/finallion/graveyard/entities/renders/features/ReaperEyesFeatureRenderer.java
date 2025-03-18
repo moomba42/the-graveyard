@@ -36,7 +36,7 @@ public class ReaperEyesFeatureRenderer extends GeoRenderLayer<ReaperEntity> {
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF
         );
     }
 

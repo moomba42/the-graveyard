@@ -4,6 +4,7 @@ import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.network.protocol.game.ClientboundOpenSignEditorPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -139,7 +140,7 @@ public class GravestoneBlock extends StandingSignBlock {
     private boolean hasEditableText(Player p_279394_, GravestoneBlockEntity p_279187_) {
         SignText signtext = p_279187_.getText();
         return Arrays.stream(signtext.getMessages(p_279394_.isTextFilteringEnabled())).allMatch((p_279411_) -> {
-            return p_279411_.equals(CommonComponents.EMPTY) || p_279411_.getContents() instanceof LiteralContents;
+            return p_279411_.equals(CommonComponents.EMPTY) || p_279411_.getContents() instanceof PlainTextContents.LiteralContents;
         });
     }
 

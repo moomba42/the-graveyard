@@ -4,6 +4,7 @@ import com.finallion.graveyard.config.GraveyardConfig;
 import com.finallion.graveyard.init.TGSounds;
 import com.finallion.graveyard.init.TGTileEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -67,19 +68,21 @@ public class UrnBlockEntity extends RandomizableContainerBlockEntity {
         return Component.translatable("container.urn");
     }
 
-    public void load(CompoundTag p_155349_) {
-        super.load(p_155349_);
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_155349_)) {
-            ContainerHelper.loadAllItems(p_155349_, this.items);
+        if (!this.tryLoadLootTable(tag)) {
+            ContainerHelper.loadAllItems(tag, this.items, registries);
         }
 
     }
 
-    protected void saveAdditional(CompoundTag p_187489_) {
-        super.saveAdditional(p_187489_);
-        if (!this.trySaveLootTable(p_187489_)) {
-            ContainerHelper.saveAllItems(p_187489_, this.items);
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.items, registries);
         }
 
     }

@@ -6,6 +6,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.chat.ClickEvent;
@@ -65,23 +66,25 @@ public class GravestoneBlockEntity extends BlockEntity {
         return 90;
     }
 
-    protected void saveAdditional(CompoundTag p_187515_) {
-        super.saveAdditional(p_187515_);
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
         SignText.DIRECT_CODEC.encodeStart(NbtOps.INSTANCE, this.frontText).resultOrPartial(LOGGER::error).ifPresent((p_277417_) -> {
-            p_187515_.put("front_text", p_277417_);
+            tag.put("front_text", p_277417_);
         });
-        p_187515_.putBoolean("is_waxed", this.isWaxed);
+        tag.putBoolean("is_waxed", this.isWaxed);
     }
 
-    public void load(CompoundTag p_155716_) {
-        super.load(p_155716_);
-        if (p_155716_.contains("front_text")) {
-            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, p_155716_.getCompound("front_text")).resultOrPartial(LOGGER::error).ifPresent((p_278212_) -> {
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        if (tag.contains("front_text")) {
+            SignText.DIRECT_CODEC.parse(NbtOps.INSTANCE, tag.getCompound("front_text")).resultOrPartial(LOGGER::error).ifPresent((p_278212_) -> {
                 this.frontText = this.loadLines(p_278212_);
             });
         }
 
-        this.isWaxed = p_155716_.getBoolean("is_waxed");
+        this.isWaxed = tag.getBoolean("is_waxed");
     }
 
     private SignText loadLines(SignText p_278305_) {
