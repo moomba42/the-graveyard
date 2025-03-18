@@ -72,9 +72,9 @@ public class LichEntity extends Monster implements GeoEntity {
     private static final UUID ATTACKING_SPEED_BOOST_ID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
     private static final UUID ATTACKING_DMG_BOOST_ID = UUID.fromString("120E0DFB-87AE-4653-9776-831010E291A1");
     private static final UUID CRAWL_SPEED_BOOST_ID = UUID.fromString("120E0DFB-87AE-1978-9776-831010E291A2");
-    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, "Crawl speed boost", 0.18D, AttributeModifier.Operation.ADDITION);;
-    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(ATTACKING_SPEED_BOOST_ID, "Attacking speed boost", GraveyardConfig.COMMON.speedInHuntPhase.get(), AttributeModifier.Operation.ADDITION);
-    private static final AttributeModifier DMG_BOOST = new AttributeModifier(ATTACKING_DMG_BOOST_ID, "Damage speed boost", GraveyardConfig.COMMON.damageHuntingPhaseAddition.get(), AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, "Crawl speed boost", 0.18D, AttributeModifier.Operation.ADD_VALUE);;
+    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(ATTACKING_SPEED_BOOST_ID, "Attacking speed boost", GraveyardConfig.COMMON.speedInHuntPhase.get(), AttributeModifier.Operation.ADD_VALUE);
+    private static final AttributeModifier DMG_BOOST = new AttributeModifier(ATTACKING_DMG_BOOST_ID, "Damage speed boost", GraveyardConfig.COMMON.damageHuntingPhaseAddition.get(), AttributeModifier.Operation.ADD_VALUE);
     // animation
     private final RawAnimation SPAWN_ANIMATION = RawAnimation.begin().then("spawn", Animation.LoopType.PLAY_ONCE);
     private final RawAnimation IDLE_ANIMATION = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
@@ -1087,22 +1087,22 @@ public class LichEntity extends Monster implements GeoEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(CAN_MOVE, false);
-        this.entityData.define(INVUL_TIMER, 0);
-        this.entityData.define(MUSIC_DELAY, 0);
-        this.entityData.define(HUNT_TIMER, 0);
-        this.entityData.define(FIGHT_DURATION_TIMER, 0);
-        this.entityData.define(HEAL_DURATION_TIMER, 0);
-        this.entityData.define(LEVITATION_DURATION_TIMER, 0);
-        this.entityData.define(CORPSE_SPELL_DURATION_TIMER, 0);
-        this.entityData.define(PHASE_INVUL_TIMER, 0);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(CONJURE_FANG_TIMER, 0);
-        this.entityData.define(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
-        this.entityData.define(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
-        this.entityData.define(PHASE, 1);
-        this.entityData.define(CAN_HUNT_START, false);
+        this.entityData.set(CAN_MOVE, false);
+        this.entityData.set(INVUL_TIMER, 0);
+        this.entityData.set(MUSIC_DELAY, 0);
+        this.entityData.set(HUNT_TIMER, 0);
+        this.entityData.set(FIGHT_DURATION_TIMER, 0);
+        this.entityData.set(HEAL_DURATION_TIMER, 0);
+        this.entityData.set(LEVITATION_DURATION_TIMER, 0);
+        this.entityData.set(CORPSE_SPELL_DURATION_TIMER, 0);
+        this.entityData.set(PHASE_INVUL_TIMER, 0);
+        this.entityData.set(ANIMATION, ANIMATION_IDLE);
+        this.entityData.set(ATTACK_ANIM_TIMER, 0);
+        this.entityData.set(CONJURE_FANG_TIMER, 0);
+        this.entityData.set(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
+        this.entityData.set(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
+        this.entityData.set(PHASE, 1);
+        this.entityData.set(CAN_HUNT_START, false);
     }
 
     // on game stop

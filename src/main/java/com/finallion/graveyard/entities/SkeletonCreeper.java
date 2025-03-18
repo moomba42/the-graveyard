@@ -2,6 +2,7 @@ package com.finallion.graveyard.entities;
 
 import com.finallion.graveyard.init.TGBlocks;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -9,7 +10,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
@@ -38,17 +38,17 @@ public class SkeletonCreeper extends Creeper {
         return this.closestPlayer != null;
     }
 
-
-    protected void dropCustomDeathLoot(DamageSource p_32292_, int p_32293_, boolean p_32294_) {
-        super.dropCustomDeathLoot(p_32292_, p_32293_, p_32294_);
-        Entity entity = p_32292_.getEntity();
+    @Override
+    protected void dropCustomDeathLoot(ServerLevel level, DamageSource damageSource, boolean recentlyHit) {
+        super.dropCustomDeathLoot(level, damageSource, recentlyHit);
+        Entity entity = damageSource.getEntity();
         if (entity != this && entity instanceof Creeper) {
             Creeper creeper = (Creeper)entity;
             if (creeper.isIgnited() && random.nextBoolean()) {
                 this.spawnAtLocation(TGBlocks.CREEPER_SKELETON.get().asItem());
             }
         } else {
-            super.dropCustomDeathLoot(p_32292_, p_32293_, p_32294_);
+            super.dropCustomDeathLoot(level, damageSource, recentlyHit);
         }
 
     }
@@ -101,10 +101,5 @@ public class SkeletonCreeper extends Creeper {
 
         super.aiStep();
 
-    }
-
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
     }
 }

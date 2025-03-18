@@ -22,7 +22,7 @@ import java.util.UUID;
 
 public abstract class AngerableGraveyardEntity extends HordeGraveyardEntity implements NeutralMob {
     private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", (double)0.15F, AttributeModifier.Operation.ADDITION);
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", (double)0.15F, AttributeModifier.Operation.ADD_VALUE);
     private static final EntityDataAccessor<Boolean> ANGRY = SynchedEntityData.defineId(AngerableGraveyardEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> PROVOKED = SynchedEntityData.defineId(AngerableGraveyardEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UniformInt ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -45,8 +45,8 @@ public abstract class AngerableGraveyardEntity extends HordeGraveyardEntity impl
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANGRY, false);
-        this.entityData.define(PROVOKED, false);
+        this.entityData.set(ANGRY, false);
+        this.entityData.set(PROVOKED, false);
     }
 
     public void addAdditionalSaveData(CompoundTag p_32520_) {

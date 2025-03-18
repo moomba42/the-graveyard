@@ -87,12 +87,12 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
         // selects one of eight skins for the ghoul (in BaseGhoulModel)
         byte variant = (byte) ((byte) random.nextInt(8) + (byte)1);
 
-        this.entityData.define(VARIANT, variant);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(RAGE_ANIM_TIMER, 0);
-        this.entityData.define(SPAWN_TIMER, 32);
-        this.entityData.define(IS_RAGING, false);
+        this.entityData.set(VARIANT, variant);
+        this.entityData.set(ANIMATION, ANIMATION_IDLE);
+        this.entityData.set(ATTACK_ANIM_TIMER, 0);
+        this.entityData.set(RAGE_ANIM_TIMER, 0);
+        this.entityData.set(SPAWN_TIMER, 32);
+        this.entityData.set(IS_RAGING, false);
     }
 
     protected void registerGoals() {
@@ -369,7 +369,7 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
         ANIMATION = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.INT);
         SPAWN_TIMER = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.INT);
         IS_RAGING = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.BOOLEAN);
-        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADDITION);
+        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADD_VALUE);
     }
 
 }

@@ -77,10 +77,10 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(REANIMATE_ANIM_TIMER, 0);
-        this.entityData.define(CAN_REANIMATE, true);
+        this.entityData.set(ANIMATION, ANIMATION_IDLE);
+        this.entityData.set(ATTACK_ANIM_TIMER, 0);
+        this.entityData.set(REANIMATE_ANIM_TIMER, 0);
+        this.entityData.set(CAN_REANIMATE, true);
     }
 
     protected void registerGoals() {
@@ -324,7 +324,7 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
         REANIMATE_ANIM_TIMER = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.INT);
         ANIMATION = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.INT);
         CAN_REANIMATE = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.BOOLEAN);
-        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADDITION);
+        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADD_VALUE);
     }
 
 

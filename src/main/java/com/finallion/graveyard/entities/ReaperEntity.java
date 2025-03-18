@@ -64,8 +64,8 @@ public class ReaperEntity extends HostileGraveyardEntity implements GeoEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(DATA_FLAGS_ID, (byte)0);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
+        this.entityData.set(DATA_FLAGS_ID, (byte)0);
+        this.entityData.set(ANIMATION, ANIMATION_IDLE);
     }
 
     public void readAdditionalSaveData(CompoundTag p_34008_) {

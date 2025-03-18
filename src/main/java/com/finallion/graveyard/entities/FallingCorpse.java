@@ -95,8 +95,8 @@ public class FallingCorpse extends Monster implements GeoEntity {
 
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(IS_FALLING, true);
-        this.entityData.define(HAS_COLLIDED, false);
+        this.entityData.set(IS_FALLING, true);
+        this.entityData.set(HAS_COLLIDED, false);
     }
 
 

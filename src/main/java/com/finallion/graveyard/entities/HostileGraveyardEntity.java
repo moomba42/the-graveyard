@@ -24,7 +24,7 @@ public abstract class HostileGraveyardEntity extends Monster {
 
     @Override
     protected void defineSynchedData() {
-        this.entityData.define(CAN_BURN_IN_SUNLIGHT, true);
+        this.entityData.set(CAN_BURN_IN_SUNLIGHT, true);
         super.defineSynchedData();
     }
 
