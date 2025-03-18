@@ -8,22 +8,19 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.GlassBlock;
+import net.minecraft.world.level.block.TintedGlassBlock;
 import net.minecraft.world.level.block.StainedGlassBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class DaggerItem extends SwordItem {
 
-   public DaggerItem(Tiers material, float effectiveDamage, float effectiveSpeed, Item.Properties settings) {
-      super(material, (int) (effectiveDamage - material.getAttackDamageBonus()), effectiveSpeed, settings);
+   public DaggerItem(Tiers material, Item.Properties settings) {
+      super(material, settings);
    }
 
-
-
-
    public float getDestroySpeed(ItemStack stack, BlockState state) {
-      if (state.is(Blocks.COBWEB) || state.getBlock() instanceof GlassBlock || state.getBlock() instanceof StainedGlassBlock || state.getBlock() instanceof StainedGlassPaneBlock) {
+      if (state.is(Blocks.COBWEB) || state.getBlock() instanceof TintedGlassBlock || state.getBlock() instanceof StainedGlassBlock || state.getBlock() instanceof StainedGlassPaneBlock) {
          return 30.0F;
       } else {
          return state.is(BlockTags.SWORD_EFFICIENT) ? 1.5F : 1.0F;
