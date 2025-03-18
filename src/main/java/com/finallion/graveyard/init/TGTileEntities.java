@@ -14,10 +14,10 @@ public class TGTileEntities {
 
     public static final DeferredRegister<BlockEntityType<?>> TILE_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, TheGraveyard.MOD_ID);
 
-    public static final DeferredHolder<BlockEntityType<OssuaryBlockEntity>, BlockEntityType<OssuaryBlockEntity>> OSSUARY_BLOCK_ENTITY = register("ossuary_block_entity", () -> BlockEntityType.Builder.of(OssuaryBlockEntity::new,
+    public static final Supplier<BlockEntityType<OssuaryBlockEntity>> OSSUARY_BLOCK_ENTITY = register("ossuary_block_entity", () -> BlockEntityType.Builder.of(OssuaryBlockEntity::new,
             TGBlocks.OSSUARY.get()).build(null));
 
-    public static final DeferredHolder<BlockEntityType<GravestoneBlockEntity>, BlockEntityType<GravestoneBlockEntity>> GRAVESTONE_BLOCK_ENTITY = register("gravestone_block_entity", () -> BlockEntityType.Builder.of(GravestoneBlockEntity::new,
+    public static final Supplier<BlockEntityType<GravestoneBlockEntity>> GRAVESTONE_BLOCK_ENTITY = register("gravestone_block_entity", () -> BlockEntityType.Builder.of(GravestoneBlockEntity::new,
             TGBlocks.GRAVESTONE.get(),
             TGBlocks.DEEPSLATE_GRAVESTONE.get(),
             TGBlocks.MOSSY_COBBLESTONE_GRAVESTONE.get(),
@@ -33,7 +33,7 @@ public class TGTileEntities {
             TGBlocks.GILDED_BLACKSTONE_GRAVESTONE.get()
     ).build(null));
 
-    public static final DeferredHolder<BlockEntityType<UrnBlockEntity>, BlockEntityType<UrnBlockEntity>> URN_BLOCK_ENTITY = register("urn_block_entity", () -> BlockEntityType.Builder.of(UrnBlockEntity::new,  TGBlocks.BLACK_URN.get(),
+    public static final Supplier<BlockEntityType<UrnBlockEntity>> URN_BLOCK_ENTITY = register("urn_block_entity", () -> BlockEntityType.Builder.of(UrnBlockEntity::new,  TGBlocks.BLACK_URN.get(),
             TGBlocks.BLUE_URN.get(),
             TGBlocks.LIGHT_BLUE_URN.get(),
             TGBlocks.CYAN_URN.get(),
@@ -50,7 +50,7 @@ public class TGTileEntities {
             TGBlocks.LIME_URN.get(),
             TGBlocks.WHITE_URN.get()).build(null));
 
-    public static final DeferredHolder<BlockEntityType<SarcophagusBlockEntity>, BlockEntityType<SarcophagusBlockEntity>> SARCOPHAGUS_BLOCK_ENTITY = register("sarcophagus_block_entity", () -> BlockEntityType.Builder.of(SarcophagusBlockEntity::new,
+    public static final Supplier<BlockEntityType<SarcophagusBlockEntity>> SARCOPHAGUS_BLOCK_ENTITY = register("sarcophagus_block_entity", () -> BlockEntityType.Builder.of(SarcophagusBlockEntity::new,
             TGBlocks.SARCOPHAGUS.get(),
             TGBlocks.OAK_COFFIN.get(),
             TGBlocks.DARK_OAK_COFFIN.get(),
@@ -65,7 +65,7 @@ public class TGTileEntities {
             TGBlocks.CHERRY_COFFIN.get()
     ).build(null));
 
-    public static final DeferredHolder<BlockEntityType<BrazierBlockEntity>, BlockEntityType<BrazierBlockEntity>> BRAZIER_BLOCK_ENTITY = register("brazier_block_entity", () -> BlockEntityType.Builder.of(BrazierBlockEntity::new,
+    public static final Supplier<BlockEntityType<BrazierBlockEntity>> BRAZIER_BLOCK_ENTITY = register("brazier_block_entity", () -> BlockEntityType.Builder.of(BrazierBlockEntity::new,
             TGBlocks.SOUL_FIRE_BRAZIER.get(),
             TGBlocks.FIRE_BRAZIER.get()).build(null));
 
