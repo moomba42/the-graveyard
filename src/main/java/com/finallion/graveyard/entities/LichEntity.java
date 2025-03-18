@@ -48,6 +48,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -1085,8 +1086,9 @@ public class LichEntity extends Monster implements GeoEntity {
 
     /* SOUNDS END */
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(CAN_MOVE, false);
         this.entityData.set(INVUL_TIMER, 0);
         this.entityData.set(MUSIC_DELAY, 0);

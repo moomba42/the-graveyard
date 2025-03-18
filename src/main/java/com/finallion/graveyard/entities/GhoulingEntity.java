@@ -48,6 +48,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -120,9 +121,9 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
                 .add(Attributes.FOLLOW_RANGE, 35.0D);
     }
 
-
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(ANIMATION, ANIMATION_IDLE);
         this.entityData.set(STAFF, ItemStack.EMPTY);
         this.entityData.set(ATTACK_ANIM_TIMER, 0);

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.monster.Ghast;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.pathfinder.PathType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -29,8 +30,9 @@ public class GraveyardMinionEntity extends PathfinderMob {
         this.setPathfindingMalus(PathType.DANGER_POWDER_SNOW, -1.0F);
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(OWNER_UUID, Optional.empty());
         this.entityData.set(TAMEABLE_FLAGS, (byte)0);
     }
@@ -116,17 +118,17 @@ public class GraveyardMinionEntity extends PathfinderMob {
         return entity == this.getOwner();
     }
 
-    public boolean isAlliedTo(Entity p_21833_) {
+    public boolean isAlliedTo(Entity entity) {
         LivingEntity livingentity = this.getOwner();
-        if (p_21833_ == livingentity) {
+        if (entity == livingentity) {
             return true;
         }
 
         if (livingentity != null) {
-            return livingentity.isAlliedTo(p_21833_);
+            return livingentity.isAlliedTo(entity);
         }
 
-        return super.isAlliedTo(p_21833_);
+        return super.isAlliedTo(entity);
     }
 
 

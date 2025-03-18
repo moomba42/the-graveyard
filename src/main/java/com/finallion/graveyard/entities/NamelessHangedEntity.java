@@ -95,10 +95,11 @@ public class NamelessHangedEntity extends AbstractVillager implements GeoEntity 
     public void thunderHit(ServerLevel p_19927_, LightningBolt p_19928_) {
     }
 
-    @Override
-    public boolean ignoreExplosion() {
-        return true;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public boolean ignoreExplosion() {
+//        return true;
+//    }
 
     @Override
     public boolean isAffectedByPotions() {
@@ -183,10 +184,11 @@ public class NamelessHangedEntity extends AbstractVillager implements GeoEntity 
         }
     }
 
-    @Override
-    protected float getStandingEyeHeight(Pose p_35297_, EntityDimensions p_35298_) {
-        return 2.0F;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    protected float getStandingEyeHeight(Pose p_35297_, EntityDimensions p_35298_) {
+//        return 2.0F;
+//    }
 
 
     public SoundEvent getNotifyTradeSound() {

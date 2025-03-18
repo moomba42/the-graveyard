@@ -28,6 +28,7 @@ import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -75,8 +76,8 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(ANIMATION, ANIMATION_IDLE);
         this.entityData.set(ATTACK_ANIM_TIMER, 0);
         this.entityData.set(REANIMATE_ANIM_TIMER, 0);
@@ -94,10 +95,6 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, AbstractVillager.class, true));
         this.targetSelector.addGoal(3, new NearestAttackableTargetGoal(this, IronGolem.class, true));
-    }
-
-    public MobType getMobType() {
-        return MobType.UNDEAD;
     }
 
 

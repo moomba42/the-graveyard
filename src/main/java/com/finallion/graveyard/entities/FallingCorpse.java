@@ -17,6 +17,7 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
@@ -93,8 +94,9 @@ public class FallingCorpse extends Monster implements GeoEntity {
         super.resetFallDistance();
     }
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(IS_FALLING, true);
         this.entityData.set(HAS_COLLIDED, false);
     }

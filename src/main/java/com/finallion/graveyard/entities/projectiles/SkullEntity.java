@@ -22,6 +22,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class SkullEntity extends AbstractHurtingProjectile {
     private static final EntityDataAccessor<Boolean> CHARGED;
@@ -112,7 +113,8 @@ public class SkullEntity extends AbstractHurtingProjectile {
         return false;
     }
 
-    protected void defineSynchedData() {
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         this.entityData.set(CHARGED, false);
     }
 

@@ -35,6 +35,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
@@ -48,6 +50,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import static net.neoforged.neoforge.event.EventHooks.onEnderTeleport;
 
 public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity, NeutralMob {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -76,14 +80,15 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
         //this.maxUpStep = 1.0F;
     }
 
-    @Override
-    public float getStepHeight() {
-        return 1.0F;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public float getStepHeight() {
+//        return 1.0F;
+//    }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         this.entityData.set(DATA_CREEPY, false);
         this.entityData.set(DATA_STARED_AT, false);
         this.entityData.set(ATTACK_ANIM_TIMER, 0);
@@ -316,7 +321,7 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
         boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(Fluids.WATER);
         if (flag && !flag1) {
-            net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(this, p_32544_, p_32545_, p_32546_);
+            EntityTeleportEvent.EnderEntity event = onEnderTeleport(this, p_32544_, p_32545_, p_32546_);
             if (event.isCanceled()) return false;
             boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), false);
             if (flag2 && !this.isSilent()) {
