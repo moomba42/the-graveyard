@@ -1,122 +1,118 @@
 package com.finallion.graveyard.config;
 
+import net.neoforged.neoforge.common.ModConfigSpec;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
-import net.minecraftforge.common.ForgeConfigSpec;
-
-import java.io.File;
 import java.util.List;
 
 public class CommonConfig {
-    public final ForgeConfigSpec.BooleanValue canGenerateHauntedHouse;
-    public final ForgeConfigSpec.BooleanValue canGenerateMediumGraveyard;
-    public final ForgeConfigSpec.BooleanValue canGenerateLargeGraveyard;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallGrave;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallDesertGrave;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallSavannaGrave;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallMountainGrave;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallGraveyard;
-    public final ForgeConfigSpec.BooleanValue canGenerateSmallDesertGraveyard;
-    public final ForgeConfigSpec.BooleanValue canGenerateMushroomGrave;
-    public final ForgeConfigSpec.BooleanValue canGenerateMemorialTree;
-    public final ForgeConfigSpec.BooleanValue canGenerateAltar;
-    public final ForgeConfigSpec.BooleanValue canGenerateCrypt;
-    public final ForgeConfigSpec.BooleanValue canGenerateGiantMushroom;
-    public final ForgeConfigSpec.BooleanValue canGenerateLichPrison;
-    public final ForgeConfigSpec.BooleanValue canGenerateRuins;
-    public final ForgeConfigSpec.BooleanValue canGenerateDeadTree;
+    public final ModConfigSpec.BooleanValue canGenerateHauntedHouse;
+    public final ModConfigSpec.BooleanValue canGenerateMediumGraveyard;
+    public final ModConfigSpec.BooleanValue canGenerateLargeGraveyard;
+    public final ModConfigSpec.BooleanValue canGenerateSmallGrave;
+    public final ModConfigSpec.BooleanValue canGenerateSmallDesertGrave;
+    public final ModConfigSpec.BooleanValue canGenerateSmallSavannaGrave;
+    public final ModConfigSpec.BooleanValue canGenerateSmallMountainGrave;
+    public final ModConfigSpec.BooleanValue canGenerateSmallGraveyard;
+    public final ModConfigSpec.BooleanValue canGenerateSmallDesertGraveyard;
+    public final ModConfigSpec.BooleanValue canGenerateMushroomGrave;
+    public final ModConfigSpec.BooleanValue canGenerateMemorialTree;
+    public final ModConfigSpec.BooleanValue canGenerateAltar;
+    public final ModConfigSpec.BooleanValue canGenerateCrypt;
+    public final ModConfigSpec.BooleanValue canGenerateGiantMushroom;
+    public final ModConfigSpec.BooleanValue canGenerateLichPrison;
+    public final ModConfigSpec.BooleanValue canGenerateRuins;
+    public final ModConfigSpec.BooleanValue canGenerateDeadTree;
 
-    public final ForgeConfigSpec.BooleanValue enableGhoul;
-    public final ForgeConfigSpec.IntValue weightGhoul;
-    public final ForgeConfigSpec.IntValue minGroupSizeGhoul;
-    public final ForgeConfigSpec.IntValue maxGroupSizeGhoul;
-    public final ForgeConfigSpec.BooleanValue ghoulCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue ghoulCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableGhoul;
+    public final ModConfigSpec.IntValue weightGhoul;
+    public final ModConfigSpec.IntValue minGroupSizeGhoul;
+    public final ModConfigSpec.IntValue maxGroupSizeGhoul;
+    public final ModConfigSpec.BooleanValue ghoulCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue ghoulCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableRevenant;
-    public final ForgeConfigSpec.IntValue weightRevenant;
-    public final ForgeConfigSpec.IntValue minGroupSizeRevenant;
-    public final ForgeConfigSpec.IntValue maxGroupSizeRevenant;
-    public final ForgeConfigSpec.BooleanValue revenantCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue revenantCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableRevenant;
+    public final ModConfigSpec.IntValue weightRevenant;
+    public final ModConfigSpec.IntValue minGroupSizeRevenant;
+    public final ModConfigSpec.IntValue maxGroupSizeRevenant;
+    public final ModConfigSpec.BooleanValue revenantCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue revenantCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableReaper;
-    public final ForgeConfigSpec.IntValue weightReaper;
-    public final ForgeConfigSpec.IntValue minGroupSizeReaper;
-    public final ForgeConfigSpec.IntValue maxGroupSizeReaper;
-    public final ForgeConfigSpec.BooleanValue reaperCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue reaperCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableReaper;
+    public final ModConfigSpec.IntValue weightReaper;
+    public final ModConfigSpec.IntValue minGroupSizeReaper;
+    public final ModConfigSpec.IntValue maxGroupSizeReaper;
+    public final ModConfigSpec.BooleanValue reaperCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue reaperCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableNightmare;
-    public final ForgeConfigSpec.IntValue weightNightmare;
-    public final ForgeConfigSpec.IntValue minGroupSizeNightmare;
-    public final ForgeConfigSpec.IntValue maxGroupSizeNightmare;
-    public final ForgeConfigSpec.BooleanValue nightmareCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue nightmareCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableNightmare;
+    public final ModConfigSpec.IntValue weightNightmare;
+    public final ModConfigSpec.IntValue minGroupSizeNightmare;
+    public final ModConfigSpec.IntValue maxGroupSizeNightmare;
+    public final ModConfigSpec.BooleanValue nightmareCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue nightmareCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableSkeletonCreeper;
-    public final ForgeConfigSpec.IntValue weightSkeletonCreeper;
-    public final ForgeConfigSpec.IntValue minGroupSizeSkeletonCreeper;
-    public final ForgeConfigSpec.IntValue maxGroupSizeSkeletonCreeper;
-    public final ForgeConfigSpec.BooleanValue skeletonCreeperCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue skeletonCreeperCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableSkeletonCreeper;
+    public final ModConfigSpec.IntValue weightSkeletonCreeper;
+    public final ModConfigSpec.IntValue minGroupSizeSkeletonCreeper;
+    public final ModConfigSpec.IntValue maxGroupSizeSkeletonCreeper;
+    public final ModConfigSpec.BooleanValue skeletonCreeperCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue skeletonCreeperCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableAcolyte;
-    public final ForgeConfigSpec.BooleanValue acolyteCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue acolyteCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableAcolyte;
+    public final ModConfigSpec.BooleanValue acolyteCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue acolyteCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableWraith;
-    public final ForgeConfigSpec.BooleanValue wraithCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue wraithCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableWraith;
+    public final ModConfigSpec.BooleanValue wraithCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue wraithCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableCorruptedPillager;
-    public final ForgeConfigSpec.BooleanValue corruptedPillagerCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue corruptedPillagerCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableCorruptedPillager;
+    public final ModConfigSpec.BooleanValue corruptedPillagerCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue corruptedPillagerCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableCorruptedVindicator;
-    public final ForgeConfigSpec.BooleanValue corruptedVindicatorCanBurnInSunlight;
-    public final ForgeConfigSpec.BooleanValue corruptedVindicatorCanBeWithered;
+    public final ModConfigSpec.BooleanValue enableCorruptedVindicator;
+    public final ModConfigSpec.BooleanValue corruptedVindicatorCanBurnInSunlight;
+    public final ModConfigSpec.BooleanValue corruptedVindicatorCanBeWithered;
 
-    public final ForgeConfigSpec.BooleanValue enableHorde;
-    public final ForgeConfigSpec.IntValue mobSpawnAttempts;
-    public final ForgeConfigSpec.IntValue ticksUntilSpawnHorde;
-    public final ForgeConfigSpec.IntValue additionalRandomizedTicks;
+    public final ModConfigSpec.BooleanValue enableHorde;
+    public final ModConfigSpec.IntValue mobSpawnAttempts;
+    public final ModConfigSpec.IntValue ticksUntilSpawnHorde;
+    public final ModConfigSpec.IntValue additionalRandomizedTicks;
 
-    public final ForgeConfigSpec.BooleanValue enableMossParticle;
-    public final ForgeConfigSpec.IntValue particleFrequency;
+    public final ModConfigSpec.BooleanValue enableMossParticle;
+    public final ModConfigSpec.IntValue particleFrequency;
 
-    public final ForgeConfigSpec.BooleanValue urnHasDoubleInventory;
-    public final ForgeConfigSpec.BooleanValue disableWitherSkeletonSpawner;
-    public final ForgeConfigSpec.BooleanValue enableBossMusic;
+    public final ModConfigSpec.BooleanValue urnHasDoubleInventory;
+    public final ModConfigSpec.BooleanValue disableWitherSkeletonSpawner;
+    public final ModConfigSpec.BooleanValue enableBossMusic;
 
-    public final ForgeConfigSpec.DoubleValue healthInCastingPhase;
-    public final ForgeConfigSpec.DoubleValue healthInHuntingPhase;
-    public final ForgeConfigSpec.DoubleValue damageCastingPhase;
-    public final ForgeConfigSpec.DoubleValue damageHuntingPhaseAddition;
-    public final ForgeConfigSpec.DoubleValue armor;
-    public final ForgeConfigSpec.DoubleValue armorToughness;
-    public final ForgeConfigSpec.DoubleValue speedInHuntPhase;
-    public final ForgeConfigSpec.IntValue durationHuntingPhase;
-    public final ForgeConfigSpec.IntValue durationFallingCorpseSpell;
-    public final ForgeConfigSpec.IntValue durationHealingSpell;
-    public final ForgeConfigSpec.IntValue durationLevitationSpell;
-    public final ForgeConfigSpec.IntValue maxAmountSkullsInShootSkullSpell;
-    public final ForgeConfigSpec.IntValue maxSummonedMobs;
-    public final ForgeConfigSpec.IntValue maxGroupSizeSummonedMobs;
-    public final ForgeConfigSpec.IntValue ghoulSpawnTimerInFight;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> isBloodCollectableEntity;
-    public final ForgeConfigSpec.ConfigValue<List<? extends String>> isBossSummonableItem;
-    public final ForgeConfigSpec.BooleanValue summoningNeedsStaffFragments;
-    public final ForgeConfigSpec.BooleanValue isMultiphaseFight;
-    public final ForgeConfigSpec.BooleanValue isInvulnerableDuringSpells;
-    public final ForgeConfigSpec.IntValue cooldownCorpseSpell;
-    public final ForgeConfigSpec.IntValue cooldownTeleportPlayerAndHeal;
-    public final ForgeConfigSpec.IntValue cooldownLevitationSpell;
-    public final ForgeConfigSpec.IntValue playerTeleportYOffset;
+    public final ModConfigSpec.DoubleValue healthInCastingPhase;
+    public final ModConfigSpec.DoubleValue healthInHuntingPhase;
+    public final ModConfigSpec.DoubleValue damageCastingPhase;
+    public final ModConfigSpec.DoubleValue damageHuntingPhaseAddition;
+    public final ModConfigSpec.DoubleValue armor;
+    public final ModConfigSpec.DoubleValue armorToughness;
+    public final ModConfigSpec.DoubleValue speedInHuntPhase;
+    public final ModConfigSpec.IntValue durationHuntingPhase;
+    public final ModConfigSpec.IntValue durationFallingCorpseSpell;
+    public final ModConfigSpec.IntValue durationHealingSpell;
+    public final ModConfigSpec.IntValue durationLevitationSpell;
+    public final ModConfigSpec.IntValue maxAmountSkullsInShootSkullSpell;
+    public final ModConfigSpec.IntValue maxSummonedMobs;
+    public final ModConfigSpec.IntValue maxGroupSizeSummonedMobs;
+    public final ModConfigSpec.IntValue ghoulSpawnTimerInFight;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> isBloodCollectableEntity;
+    public final ModConfigSpec.ConfigValue<List<? extends String>> isBossSummonableItem;
+    public final ModConfigSpec.BooleanValue summoningNeedsStaffFragments;
+    public final ModConfigSpec.BooleanValue isMultiphaseFight;
+    public final ModConfigSpec.BooleanValue isInvulnerableDuringSpells;
+    public final ModConfigSpec.IntValue cooldownCorpseSpell;
+    public final ModConfigSpec.IntValue cooldownTeleportPlayerAndHeal;
+    public final ModConfigSpec.IntValue cooldownLevitationSpell;
+    public final ModConfigSpec.IntValue playerTeleportYOffset;
 
 
-    public CommonConfig(ForgeConfigSpec.Builder builder) {
+    public CommonConfig(ModConfigSpec.Builder builder) {
         builder.comment(" Welcome to The Graveyard Config!" +
                 "Welcome to The Graveyard Config! \n " +
                 "\n" +
@@ -259,17 +255,5 @@ public class CommonConfig {
         this.enableBossMusic = builder.define("bossMusic.enableBossMusic", true);
         this.disableWitherSkeletonSpawner = builder.define("spawner.disableWitherSkeletonSpawner", false);
         builder.pop();
-    }
-
-
-
-    /*
-    Credit to AzureDoom and Tslat
-     */
-    public static void loadConfig(ForgeConfigSpec config, String path) {
-        final CommentedFileConfig file = CommentedFileConfig.builder(new File(path)).sync().autosave()
-                .writingMode(WritingMode.REPLACE).build();
-        file.load();
-        config.setConfig(file);
     }
 }
