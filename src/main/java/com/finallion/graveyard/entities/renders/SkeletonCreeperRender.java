@@ -14,7 +14,7 @@ import net.minecraft.world.entity.monster.Creeper;
 
 
 public class SkeletonCreeperRender extends MobRenderer<Creeper, CreeperModel<Creeper>> {
-    private static final ResourceLocation CREEPER_LOCATION = new ResourceLocation(TheGraveyard.MOD_ID,"textures/entity/skeleton_creeper.png");
+    private static final ResourceLocation CREEPER_LOCATION = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID,"textures/entity/skeleton_creeper.png");
 
     public SkeletonCreeperRender(EntityRendererProvider.Context p_174304_) {
         super(p_174304_, new CreeperModel<>(p_174304_.bakeLayer(ModelLayers.CREEPER)), 0.5F);

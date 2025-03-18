@@ -6,11 +6,11 @@ import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib.model.GeoModel;
 
 public class LichModel extends GeoModel<LichEntity> {
-    private ResourceLocation texture = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/lich_texture.png");
+    private ResourceLocation texture = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/lich_texture.png");
 
     @Override
     public ResourceLocation getModelResource(LichEntity object) {
-        return new ResourceLocation(TheGraveyard.MOD_ID, "geo/lich.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "geo/lich.geo.json");
     }
 
     @Override
@@ -20,7 +20,7 @@ public class LichModel extends GeoModel<LichEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(LichEntity animatable) {
-        return new ResourceLocation(TheGraveyard.MOD_ID, "animations/lich/lich.animation.json");
+        return ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "animations/lich/lich.animation.json");
     }
 
 }

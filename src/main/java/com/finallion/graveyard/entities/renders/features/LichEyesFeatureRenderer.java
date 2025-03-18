@@ -15,7 +15,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 
 public class LichEyesFeatureRenderer extends GeoRenderLayer<LichEntity> {
-    private RenderType TEXTURE = RenderType.eyes(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/lich_eye_texture.png"));
+    private RenderType TEXTURE = RenderType.eyes(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/lich_eye_texture.png"));
     private final GeoRenderer<LichEntity> renderer;
 
     public LichEyesFeatureRenderer(GeoRenderer<LichEntity> entityRendererIn) {
@@ -37,7 +37,7 @@ public class LichEyesFeatureRenderer extends GeoRenderLayer<LichEntity> {
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF // alpha << 24 | red << 16 | green << 8 | blue
         );
     }
 

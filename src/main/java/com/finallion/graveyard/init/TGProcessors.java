@@ -22,9 +22,9 @@ public class TGProcessors {
 
 
     public static void registerProcessors() {
-        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, new ResourceLocation(TheGraveyard.MOD_ID, "remove_waterlogged_processor"), REMOVE_WATERLOGGED);
-        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, new ResourceLocation(TheGraveyard.MOD_ID, "switch_spawner_processor"), SWITCH_SPAWNER);
-        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, new ResourceLocation(TheGraveyard.MOD_ID, "waterlogged_crypt_processor"), REMOVE_WATERLOGGED_CRYPT);
+        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "remove_waterlogged_processor"), REMOVE_WATERLOGGED);
+        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "switch_spawner_processor"), SWITCH_SPAWNER);
+        Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "waterlogged_crypt_processor"), REMOVE_WATERLOGGED_CRYPT);
 
     }
 }

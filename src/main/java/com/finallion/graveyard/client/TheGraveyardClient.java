@@ -39,7 +39,7 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class TheGraveyardClient {
     //private static final RenderType CUTOUT_MIPPED = RenderType.cutoutMipped();
-    public static final ModelLayerLocation CORRUPTED_ILLAGER_MODEL_LAYER = new ModelLayerLocation(new ResourceLocation(TheGraveyard.MOD_ID, "corrupted_illager"), "main");
+    public static final ModelLayerLocation CORRUPTED_ILLAGER_MODEL_LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "corrupted_illager"), "main");
     private static final RenderType CUTOUT_MIPPED = RenderType.cutoutMipped();
 
 

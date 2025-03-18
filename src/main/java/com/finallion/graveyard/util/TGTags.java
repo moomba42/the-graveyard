@@ -20,7 +20,7 @@ public class TGTags {
 
 
     public static TagKey<Biome> biomeTag(String name) {
-        return TagKey.create(Registries.BIOME, new ResourceLocation(TheGraveyard.MOD_ID, name));
+        return TagKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, name));
     }
 
 }

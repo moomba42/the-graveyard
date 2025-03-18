@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.ChestBlock;
@@ -22,8 +23,8 @@ import net.minecraft.world.level.block.DoubleBlockCombiner;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LidBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 
 @OnlyIn(Dist.CLIENT)
@@ -43,8 +44,9 @@ public class SarcophagusBlockEntityRenderer<T extends BlockEntity & LidBlockEnti
         if (baseModel == null) {
             BlockState blockState = entity.getBlockState();
 
-            baseModel = modelManager.getModel(new ResourceLocation(TheGraveyard.MOD_ID, "item/" + ((SarcophagusBlock)blockState.getBlock()).getBase()));
-            lidModel = modelManager.getModel(new ResourceLocation(TheGraveyard.MOD_ID, "item/" + ((SarcophagusBlock)blockState.getBlock()).getLid()));
+            // TODO: Check if this works
+            baseModel = modelManager.getModel(ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "item/" + ((SarcophagusBlock)blockState.getBlock()).getBase())));
+            lidModel = modelManager.getModel(ModelResourceLocation.standalone(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "item/" + ((SarcophagusBlock)blockState.getBlock()).getLid())));
         }
 
         if (entity.getLevel() != null && entity.getBlockState().getValue(SarcophagusBlock.PART) == SarcophagusPart.HEAD) {

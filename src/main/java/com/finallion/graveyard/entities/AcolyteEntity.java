@@ -28,7 +28,7 @@ public class AcolyteEntity extends CorruptedIllager {
     }
 
     protected void populateDefaultEquipmentSlots(RandomSource random, DifficultyInstance p_34084_) {
-        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(BuiltInRegistries.ITEM.get(new ResourceLocation(TheGraveyard.MOD_ID, "bone_dagger"))));
+        this.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(BuiltInRegistries.ITEM.get(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "bone_dagger"))));
     }
 
     public static AttributeSupplier.Builder createAttributes() {

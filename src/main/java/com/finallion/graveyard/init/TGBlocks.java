@@ -21,19 +21,19 @@ public class TGBlocks {
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, TheGraveyard.MOD_ID);
     public static List<Block> coffins = new ArrayList<Block>();
 
-    public static final ResourceLocation POLISHED_BASALT_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/polished_basalt.png");
-    public static final ResourceLocation COBBLESTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/cobblestone.png");
-    public static final ResourceLocation MOSSY_COBBLESTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_cobblestone.png");
-    public static final ResourceLocation DEEPSLATE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/deepslate.png");
-    public static final ResourceLocation BLACKSTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/blackstone.png");
-    public static final ResourceLocation BRICKS_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/bricks.png");
-    public static final ResourceLocation CRACKED_BLACKSTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/cracked_blackstoe.png");
-    public static final ResourceLocation GILDED_BLACKSTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/gilded_blackstone.png");
-    public static final ResourceLocation MOSSY_STONE_BRICKS_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_stone_bricks.png");
-    public static final ResourceLocation QUARTZ_BRICKS_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/quartz_bricks.png");
-    public static final ResourceLocation RED_SANDSTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/red_sandstone.png");
-    public static final ResourceLocation SANDSTONE_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/sandstone.png");
-    public static final ResourceLocation STONE_BRICKS_GRAVESTONE_TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/stone_bricks.png");
+    public static final ResourceLocation POLISHED_BASALT_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/polished_basalt.png");
+    public static final ResourceLocation COBBLESTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/cobblestone.png");
+    public static final ResourceLocation MOSSY_COBBLESTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_cobblestone.png");
+    public static final ResourceLocation DEEPSLATE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/deepslate.png");
+    public static final ResourceLocation BLACKSTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/blackstone.png");
+    public static final ResourceLocation BRICKS_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/bricks.png");
+    public static final ResourceLocation CRACKED_BLACKSTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/cracked_blackstoe.png");
+    public static final ResourceLocation GILDED_BLACKSTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/gilded_blackstone.png");
+    public static final ResourceLocation MOSSY_STONE_BRICKS_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_stone_bricks.png");
+    public static final ResourceLocation QUARTZ_BRICKS_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/quartz_bricks.png");
+    public static final ResourceLocation RED_SANDSTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/red_sandstone.png");
+    public static final ResourceLocation SANDSTONE_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/sandstone.png");
+    public static final ResourceLocation STONE_BRICKS_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/stone_bricks.png");
 
     public static final RegistryObject<Block> TG_ROOTED_DIRT = BLOCKS.register("tg_rooted_dirt", () -> new Block(BlockBehaviour.Properties.copy(Blocks.ROOTED_DIRT).lootFrom(() -> Blocks.ROOTED_DIRT)));
     public static final RegistryObject<Block> TG_TUFF = BLOCKS.register("tg_tuff", () -> new Block(BlockBehaviour.Properties.copy(Blocks.TUFF).lootFrom(() -> Blocks.TUFF)));

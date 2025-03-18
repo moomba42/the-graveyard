@@ -157,16 +157,16 @@ public class GravestoneBlockEntityRenderer implements BlockEntityRenderer<Graves
     }
 
     static {
-        defaultLayer = RenderType.entitySolid(new ResourceLocation("textures/entity/signs/oak.png"));
-        RenderType layer1 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/polished_basalt.png"));
-        RenderType layer2 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/cobblestone.png"));
-        RenderType layer3 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_cobblestone.png"));
-        RenderType layer4 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/deepslate.png"));
-        RenderType layer5 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/blackstone.png"));
-        RenderType layer6 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/cracked_blackstone.png"));
-        RenderType layer7 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/stone_bricks.png"));
-        RenderType layer8 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_stone_bricks.png"));
-        RenderType layer9 = RenderType.entitySolid(new ResourceLocation(TheGraveyard.MOD_ID, "textures/entity/gravestone/bricks.png"));
+        defaultLayer = RenderType.entitySolid(ResourceLocation.withDefaultNamespace("textures/entity/signs/oak.png"));
+        RenderType layer1 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/polished_basalt.png"));
+        RenderType layer2 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/cobblestone.png"));
+        RenderType layer3 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_cobblestone.png"));
+        RenderType layer4 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/deepslate.png"));
+        RenderType layer5 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/blackstone.png"));
+        RenderType layer6 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/cracked_blackstone.png"));
+        RenderType layer7 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/stone_bricks.png"));
+        RenderType layer8 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/mossy_stone_bricks.png"));
+        RenderType layer9 = RenderType.entitySolid(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/bricks.png"));
         RenderType layer10 = RenderType.entitySolid(TGBlocks.RED_SANDSTONE_GRAVESTONE_TEXTURE);
         RenderType layer11 = RenderType.entitySolid(TGBlocks.SANDSTONE_GRAVESTONE_TEXTURE);
         RenderType layer12 = RenderType.entitySolid(TGBlocks.GILDED_BLACKSTONE_GRAVESTONE_TEXTURE);

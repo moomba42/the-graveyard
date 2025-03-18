@@ -4,7 +4,6 @@ import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.network.protocol.game.ClientboundOpenSignEditorPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +54,7 @@ public class GravestoneBlock extends StandingSignBlock {
     private final ResourceLocation texture;
 
     public GravestoneBlock(ResourceLocation texture) {
-        super(BlockBehaviour.Properties.of().noCollission().noOcclusion().sound(SoundType.BASALT).strength(1.5F), WoodType.OAK);
+        super(WoodType.OAK, Properties.of().noCollission().noOcclusion().sound(SoundType.BASALT).strength(1.5F));
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(FLOOR, true).setValue(WATERLOGGED, false).setValue(ROTATION, 0));
         this.texture = texture;
     }
