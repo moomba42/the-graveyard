@@ -8,7 +8,7 @@ import com.finallion.graveyard.item.VialOfBlood;
 import com.finallion.graveyard.recipe.TGRecipeTypes;
 import com.finallion.graveyard.util.SpawnRules;
 import com.finallion.graveyard.util.TGTags;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -16,40 +16,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.neoforged.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.neoforge.common.world.BiomeModifier;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.DistExecutor;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import software.bernie.geckolib.GeckoLib;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
+
+import java.util.function.Supplier;
 
 
 @Mod("graveyard")
 public class TheGraveyard {
     public static final String MOD_ID = "graveyard";
-    public static final Logger LOGGER = LogManager.getLogger();
     private static final DeferredRegister<CreativeModeTab> CREATIVE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MOD_ID);
 
-    public TheGraveyard() {
-        GeckoLib.initialize();
-
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> TheGraveyardClient::new);
-
-        IEventBus forgeBus = MinecraftForge.EVENT_BUS;
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
+    public TheGraveyard(IEventBus modEventBus, ModContainer modContainer) {
         modEventBus.addListener(this::setup);
 
         CREATIVE_TABS.register(modEventBus);
@@ -66,18 +53,19 @@ public class TheGraveyard {
 
         modEventBus.addListener(this::setupClient);
 
-        final DeferredRegister<Codec<? extends BiomeModifier>> serializers = DeferredRegister.create(ForgeRegistries.Keys.BIOME_MODIFIER_SERIALIZERS, MOD_ID);
+        final DeferredRegister<MapCodec<? extends BiomeModifier>> serializers = DeferredRegister.create(NeoForgeRegistries.BIOME_MODIFIER_SERIALIZERS, MOD_ID);
         serializers.register(modEventBus);
         serializers.register("mobspawns", SpawnRules.ModSpawnModifier::makeCodec);
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GraveyardConfig.COMMON_SPEC, "graveyard-1.19.x-common.toml");
-        CommonConfig.loadConfig(GraveyardConfig.COMMON_SPEC, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-1.19.x-common.toml").toString());
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, GraveyardConfig.COMMON_SPEC, "graveyard-1.21.x-common.toml");
+        CommonConfig.loadConfig(GraveyardConfig.COMMON_SPEC, FMLPaths.CONFIGDIR.get().resolve(MOD_ID + "-1.21.x-common.toml").toString());
 
     }
 
     public void setupClient(final FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
             /* CHANGING ITEM TEXTURE */
+            // TODO Fix resource locations
             ItemProperties.register(TGItems.VIAL_OF_BLOOD.get(), new ResourceLocation("charged"), (stack, world, entity, seed) -> {
                 if (entity != null && stack.is(TGItems.VIAL_OF_BLOOD.get())) {
                     return VialOfBlood.getBlood(stack);
@@ -97,7 +85,7 @@ public class TheGraveyard {
         });
     }
 
-    public static final RegistryObject<CreativeModeTab> GROUP = CREATIVE_TABS.register("group", () -> new CreativeModeTab.Builder(CreativeModeTab.Row.TOP,0)
+    public static final Supplier<CreativeModeTab> GROUP = CREATIVE_TABS.register("group", () -> new CreativeModeTab.Builder(CreativeModeTab.Row.TOP,0)
             .icon(() -> new ItemStack(Items.SKELETON_SKULL))
             .title(Component.literal("The Graveyard"))
             .displayItems((featureFlags, output) -> {

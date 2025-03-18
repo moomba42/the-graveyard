@@ -9,16 +9,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class TGBlocks {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, TheGraveyard.MOD_ID);
+    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.createBlocks(TheGraveyard.MOD_ID);
     public static List<Block> coffins = new ArrayList<Block>();
 
     public static final ResourceLocation POLISHED_BASALT_GRAVESTONE_TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/gravestone/polished_basalt.png");

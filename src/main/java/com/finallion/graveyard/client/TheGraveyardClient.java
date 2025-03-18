@@ -27,56 +27,37 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.GrassColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.ModelEvent;
-import net.minecraftforge.client.event.RegisterColorHandlersEvent;
-import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.ModelEvent;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
+import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.common.EventBusSubscriber;
 
-
+@EventBusSubscriber(modid = TheGraveyard.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class TheGraveyardClient {
-    //private static final RenderType CUTOUT_MIPPED = RenderType.cutoutMipped();
     public static final ModelLayerLocation CORRUPTED_ILLAGER_MODEL_LAYER = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "corrupted_illager"), "main");
     private static final RenderType CUTOUT_MIPPED = RenderType.cutoutMipped();
 
-
-    public TheGraveyardClient() {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
-        modEventBus.addListener(this::clientInit);
-        modEventBus.addListener(this::initParticles);
-        modEventBus.addListener(this::onBlockColorsInit);
-        modEventBus.addListener(this::onItemColorsInit);
-        modEventBus.addListener(this::registerEntityRenderers);
-        modEventBus.addListener(this::registerLayerDefinition);
-        modEventBus.addListener(this::registerEntityModels);
-        modEventBus.addListener(this::initScreens);
-
-
+    @SubscribeEvent
+    public static void initScreens(final FMLClientSetupEvent event) {
+        event.enqueueWork(() -> MenuScreens.register(TGScreens.OSSUARY_SCREEN_HANDLER.get(), OssuaryScreen::new));
     }
 
     @SubscribeEvent
-    public void initScreens(final FMLClientSetupEvent event) {
-        event.enqueueWork(() -> {
-            MenuScreens.register(TGScreens.OSSUARY_SCREEN_HANDLER.get(), OssuaryScreen::new);
-        });
-    }
-
-    @SubscribeEvent
-    public void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
+    public static void registerLayerDefinition(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(CORRUPTED_ILLAGER_MODEL_LAYER, CorruptedIllagerModel::createBodyModel);
     }
 
     @SubscribeEvent
-    public void clientInit(FMLClientSetupEvent event) {
+    public static void clientInit(FMLClientSetupEvent event) {
         ItemBlockRenderTypes.setRenderLayer(TGBlocks.TG_GRASS_BLOCK.get(), CUTOUT_MIPPED);
     }
 
     @SubscribeEvent
-    public void initParticles(RegisterParticleProvidersEvent event){
+    public static void initParticles(RegisterParticleProvidersEvent event){
         event.registerSpriteSet(TGParticles.GRAVEYARD_FOG_PARTICLE.get(), GraveyardFogParticle.FogFactory::new);
         event.registerSpriteSet(TGParticles.GRAVEYARD_SOUL_PARTICLE.get(), GraveyardSoulParticle.Provider::new);
         event.registerSpriteSet(TGParticles.GRAVEYARD_HAND_PARTICLE.get(), GraveyardHandParticle.Provider::new);
@@ -85,7 +66,7 @@ public class TheGraveyardClient {
     }
 
     @SubscribeEvent
-    public void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+    public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TGEntities.SKELETON_CREEPER.get(), SkeletonCreeperRender::new);
         event.registerEntityRenderer(TGEntities.ACOLYTE.get(), AcolyteRender::new);
         event.registerEntityRenderer(TGEntities.GHOUL.get(), GhoulRenderer::new);
@@ -109,14 +90,14 @@ public class TheGraveyardClient {
     }
 
     @SubscribeEvent
-    public void onBlockColorsInit(RegisterColorHandlersEvent.Block event) {
+    public static void onBlockColorsInit(RegisterColorHandlersEvent.Block event) {
         final BlockColors blockColors = event.getBlockColors();
         blockColors.register((state, reader, pos, color) -> reader != null && pos != null ? BiomeColors.getAverageGrassColor(reader, pos) : GrassColor.get(0.5D, 1.0D), TGBlocks.TG_GRASS_BLOCK.get());
 
     }
 
     @SubscribeEvent
-    public void onItemColorsInit(RegisterColorHandlersEvent.Item event) {
+    public static void onItemColorsInit(RegisterColorHandlersEvent.Item event) {
         final BlockColors blockColors = event.getBlockColors();
         final ItemColors itemColors = event.getItemColors();
 
@@ -129,7 +110,7 @@ public class TheGraveyardClient {
     }
 
     @SubscribeEvent
-    public void registerEntityModels(ModelEvent.RegisterAdditional event) {
+    public static void registerEntityModels(ModelEvent.RegisterAdditional event) {
         event.register(new ResourceLocation(TheGraveyard.MOD_ID, "item/sarcophagus_base"));
         event.register(new ResourceLocation(TheGraveyard.MOD_ID, "item/sarcophagus_lid"));
 
