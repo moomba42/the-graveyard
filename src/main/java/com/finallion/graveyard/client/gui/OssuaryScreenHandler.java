@@ -14,6 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private final Level level;
-    private List<OssuaryRecipe> recipes = Lists.newArrayList();
+    private List<RecipeHolder<OssuaryRecipe>> recipes = Lists.newArrayList();
     private ItemStack input = ItemStack.EMPTY;
     long lastSoundTime;
     final Slot inputSlot;
@@ -48,10 +50,10 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
         this(p_40294_, p_40295_, ContainerLevelAccess.NULL);
     }
 
-    public OssuaryScreenHandler(int p_40297_, Inventory p_40298_, final ContainerLevelAccess p_40299_) {
-        super(MenuType.STONECUTTER, p_40297_);
-        this.access = p_40299_;
-        this.level = p_40298_.player.level();
+    public OssuaryScreenHandler(int containerId, Inventory playerInventory, final ContainerLevelAccess access) {
+        super(MenuType.STONECUTTER, containerId);
+        this.access = access;
+        this.level = playerInventory.player.level();
         this.inputSlot = this.addSlot(new Slot(this.container, 0, 20, 33));
         this.resultSlot = this.addSlot(new Slot(this.resultContainer, 1, 143, 33) {
             public boolean mayPlace(ItemStack p_40362_) {
@@ -60,13 +62,13 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
 
             public void onTake(Player p_150672_, ItemStack p_150673_) {
                 p_150673_.onCraftedBy(p_150672_.level(), p_150672_, p_150673_.getCount());
-                OssuaryScreenHandler.this.resultContainer.awardUsedRecipes(p_150672_, this.getInputStacks());
+                OssuaryScreenHandler.this.resultContainer.awardUsedRecipes(p_150672_, this.getRelevantItems());
                 ItemStack itemstack = OssuaryScreenHandler.this.inputSlot.remove(1);
                 if (!itemstack.isEmpty()) {
                     OssuaryScreenHandler.this.setupResultSlot();
                 }
 
-                p_40299_.execute((p_40364_, p_40365_) -> {
+                access.execute((p_40364_, p_40365_) -> {
                     long l = p_40364_.getGameTime();
                     if (OssuaryScreenHandler.this.lastSoundTime != l) {
                         p_40364_.playSound((Player)null, p_40365_, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, -3.0F);
@@ -77,19 +79,19 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
                 super.onTake(p_150672_, p_150673_);
             }
 
-            private List<ItemStack> getInputStacks() {
+            private List<ItemStack> getRelevantItems() {
                 return List.of(OssuaryScreenHandler.this.inputSlot.getItem());
             }
         });
 
         for(int i = 0; i < 3; ++i) {
             for(int j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(p_40298_, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
+                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
             }
         }
 
         for(int k = 0; k < 9; ++k) {
-            this.addSlot(new Slot(p_40298_, k, 8 + k * 18, 142));
+            this.addSlot(new Slot(playerInventory, k, 8 + k * 18, 142));
         }
 
         this.addDataSlot(this.selectedRecipeIndex);
@@ -99,7 +101,7 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
         return this.selectedRecipeIndex.get();
     }
 
-    public List<OssuaryRecipe> getRecipes() {
+    public List<RecipeHolder<OssuaryRecipe>> getRecipes() {
         return this.recipes;
     }
 
@@ -137,20 +139,24 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
 
     }
 
-    private void setupRecipeList(Container p_40304_, ItemStack p_40305_) {
+    private static SingleRecipeInput createRecipeInput(Container container) {
+        return new SingleRecipeInput(container.getItem(0));
+    }
+
+    private void setupRecipeList(Container container, ItemStack stack) {
         this.recipes.clear();
         this.selectedRecipeIndex.set(-1);
         this.resultSlot.set(ItemStack.EMPTY);
-        if (!p_40305_.isEmpty()) {
-            this.recipes = this.level.getRecipeManager().getRecipesFor(TGRecipeTypes.OSSUARY_CARVING.get(), p_40304_, this.level);
+        if (!stack.isEmpty()) {
+            this.recipes = this.level.getRecipeManager().getRecipesFor(TGRecipeTypes.OSSUARY_CARVING.get(), createRecipeInput(container), this.level);
         }
 
     }
 
     void setupResultSlot() {
         if (!this.recipes.isEmpty() && this.isValidRecipeIndex(this.selectedRecipeIndex.get())) {
-            OssuaryRecipe carvingRecipe = this.recipes.get(this.selectedRecipeIndex.get());
-            ItemStack itemStack = carvingRecipe.assemble(this.container, this.level.registryAccess());
+            RecipeHolder<OssuaryRecipe> carvingRecipe = this.recipes.get(this.selectedRecipeIndex.get());
+            ItemStack itemStack = carvingRecipe.value().assemble(createRecipeInput(this.container), this.level.registryAccess());
             if (itemStack.isItemEnabled(this.level.enabledFeatures())) {
                 this.resultContainer.setRecipeUsed(carvingRecipe);
                 this.resultSlot.set(itemStack);
@@ -195,7 +201,7 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, 2, 38, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (this.level.getRecipeManager().getRecipeFor(TGRecipeTypes.OSSUARY_CARVING.get(), new SimpleContainer(itemstack1), this.level).isPresent()) {
+            } else if (this.level.getRecipeManager().getRecipeFor(TGRecipeTypes.OSSUARY_CARVING.get(), new SingleRecipeInput(itemstack1), this.level).isPresent()) {
                 if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }

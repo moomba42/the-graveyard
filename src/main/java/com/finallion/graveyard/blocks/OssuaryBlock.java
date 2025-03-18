@@ -3,6 +3,7 @@ package com.finallion.graveyard.blocks;
 import com.finallion.graveyard.blockentities.OssuaryBlockEntity;
 import com.finallion.graveyard.client.gui.OssuaryScreenHandler;
 import com.finallion.graveyard.init.TGTileEntities;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -31,6 +32,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class OssuaryBlock extends BaseEntityBlock {
+    public static final MapCodec<OssuaryBlock> CODEC = simpleCodec(OssuaryBlock::new);
     private static final Component TITLE = Component.translatable("container.ossuary");
     public static final DirectionProperty FACING;
     public static final BooleanProperty OPEN;
@@ -38,6 +40,11 @@ public class OssuaryBlock extends BaseEntityBlock {
     public OssuaryBlock(Properties settings) {
         super(settings);
         this.registerDefaultState((BlockState)((BlockState)stateDefinition.any()).setValue(FACING, Direction.NORTH).setValue(OPEN, false));
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
@@ -91,7 +98,7 @@ public class OssuaryBlock extends BaseEntityBlock {
     }
 
     @Override
-    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+    public boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 

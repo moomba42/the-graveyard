@@ -14,7 +14,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -119,10 +118,11 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
     }
 
-
-    public MobType getMobType() {
-        return MobType.UNDEAD;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public MobType getMobType() {
+//        return MobType.UNDEAD;
+//    }
 
     public int getAnimationState() {
         return this.entityData.get(ANIMATION);

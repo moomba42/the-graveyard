@@ -4,6 +4,7 @@ import com.finallion.graveyard.blockentities.animation.SarcophagusLidAnimator;
 import com.finallion.graveyard.init.TGSounds;
 import com.finallion.graveyard.init.TGTileEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -78,19 +79,21 @@ public class SarcophagusBlockEntity extends RandomizableContainerBlockEntity imp
         return Component.translatable("container.sarcophagus");
     }
 
-    public void load(CompoundTag p_155349_) {
-        super.load(p_155349_);
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(p_155349_)) {
-            ContainerHelper.loadAllItems(p_155349_, this.items);
+        if (!this.tryLoadLootTable(tag)) {
+            ContainerHelper.loadAllItems(tag, this.items, registries);
         }
 
     }
 
-    protected void saveAdditional(CompoundTag p_187489_) {
-        super.saveAdditional(p_187489_);
-        if (!this.trySaveLootTable(p_187489_)) {
-            ContainerHelper.saveAllItems(p_187489_, this.items);
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        if (!this.trySaveLootTable(tag)) {
+            ContainerHelper.saveAllItems(tag, this.items, registries);
         }
 
     }
@@ -143,12 +146,6 @@ public class SarcophagusBlockEntity extends RandomizableContainerBlockEntity imp
         double f = (double) p_155340_.getZ() + 0.5D;
 
         p_155339_.playSound((Player)null, d, e, f, p_155342_, SoundSource.BLOCKS, 0.75F, -70.0F);
-    }
-
-    // prevents model from clipping to invis when in the corner of the screen, needs to override shouldRenderOffScreen in the blockentityrenderer
-    @Override
-    public AABB getRenderBoundingBox() {
-        return new AABB(this.getBlockPos().offset(-1, 0, -1), this.getBlockPos().offset(2, 2, 2));
     }
 
     /*

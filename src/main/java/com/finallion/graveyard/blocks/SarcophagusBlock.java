@@ -6,15 +6,22 @@ import com.finallion.graveyard.entities.WraithEntity;
 import com.finallion.graveyard.init.TGAdvancements;
 import com.finallion.graveyard.init.TGEntities;
 import com.finallion.graveyard.init.TGTileEntities;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.floats.Float2FloatFunction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -41,6 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 import java.util.function.BiPredicate;
+import java.util.function.Supplier;
 
 /*
 THINGS TO CHECK IF THE MODEL CASTS UNWANTED SHADOWS:
@@ -54,7 +62,16 @@ THINGS TO CHECK IF THE MODEL CASTS UNWANTED SHADOWS:
 - renderFlat in model renderer might help.
  */
 
-public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity> implements SimpleWaterloggedBlock {
+public class SarcophagusBlock extends BaseEntityBlock implements SimpleWaterloggedBlock {
+    public static final MapCodec<SarcophagusBlock> CODEC = RecordCodecBuilder.mapCodec(
+            instance -> instance.group(
+                        propertiesCodec(),
+                        Codec.BOOL.fieldOf("isCoffin").forGetter(block -> block.isCoffin),
+                        Codec.STRING.fieldOf("lidRL").forGetter(block -> block.lidRL),
+                        Codec.STRING.fieldOf("baseRL").forGetter(block -> block.baseRL)
+                    ).apply(instance, SarcophagusBlock::new)
+    );
+
     public static final int EVENT_SET_OPEN_COUNT = 1;
     protected static final VoxelShape DOUBLE_NORTH_SHAPE = Block.box(1.0D, 1.0D, 1.0D, 15.0D, 14.0D, 15.0D);;
     protected static final VoxelShape DOUBLE_SOUTH_SHAPE = Block.box(1.0D, 1.0D, 1.0D, 15.0D, 14.0D, 15.0D);
@@ -66,15 +83,17 @@ public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity
     public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     public static final BooleanProperty PLAYER_PLACED = BlockStateProperties.LOCKED;
     public static final BooleanProperty IS_COFFIN = BlockStateProperties.LIT;
-    private final String lidRL;
-    private final String baseRL;
+    public final String lidRL;
+    public final String baseRL;
+    public final boolean isCoffin;
 
     // open state missing
     public SarcophagusBlock(Properties properties, boolean isCoffin, String lid, String base) {
-        super(properties, TGTileEntities.SARCOPHAGUS_BLOCK_ENTITY::get);
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(PART, SarcophagusPart.FOOT).setValue(WATERLOGGED, false).setValue(PLAYER_PLACED, false).setValue(IS_COFFIN, isCoffin));
         this.baseRL = base;
         this.lidRL = lid;
+        this.isCoffin = isCoffin;
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> p_51562_) {
@@ -99,7 +118,7 @@ public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity
     }
 
     @Override
-    public boolean isPathfindable(BlockState p_60475_, BlockGetter p_60476_, BlockPos p_60477_, PathComputationType p_60478_) {
+    public boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
     }
 
@@ -201,21 +220,20 @@ public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity
         return bedPart == SarcophagusPart.HEAD ? DoubleBlockCombiner.BlockType.FIRST : DoubleBlockCombiner.BlockType.SECOND;
     }
 
-
-    public void playerWillDestroy(Level p_49505_, BlockPos p_49506_, BlockState p_49507_, Player p_49508_) {
-        if (!p_49505_.isClientSide && p_49508_.isCreative()) {
-            SarcophagusPart part = p_49507_.getValue(PART);
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        if (!level.isClientSide && player.isCreative()) {
+            SarcophagusPart part = state.getValue(PART);
             if (part == SarcophagusPart.FOOT) {
-                BlockPos blockpos = p_49506_.relative(getNeighbourDirection(part, p_49507_.getValue(FACING)));
-                BlockState blockstate = p_49505_.getBlockState(blockpos);
+                BlockPos blockpos = pos.relative(getNeighbourDirection(part, state.getValue(FACING)));
+                BlockState blockstate = level.getBlockState(blockpos);
                 if (blockstate.is(this) && blockstate.getValue(PART) == SarcophagusPart.HEAD) {
-                    p_49505_.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
-                    p_49505_.levelEvent(p_49508_, 2001, blockpos, Block.getId(blockstate));
+                    level.setBlock(blockpos, Blocks.AIR.defaultBlockState(), 35);
+                    level.levelEvent(player, 2001, blockpos, Block.getId(blockstate));
                 }
             }
         }
 
-        super.playerWillDestroy(p_49505_, p_49506_, p_49507_, p_49508_);
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
 
@@ -243,6 +261,11 @@ public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity
 
     public BlockEntity newBlockEntity(BlockPos p_153064_, BlockState p_153065_) {
         return new SarcophagusBlockEntity(p_153064_, p_153065_);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     public RenderShape getRenderShape(BlockState p_51567_) {
@@ -307,19 +330,12 @@ public class SarcophagusBlock extends AbstractCoffinBlock<SarcophagusBlockEntity
 
     public DoubleBlockCombiner.NeighborCombineResult<? extends SarcophagusBlockEntity> combine(BlockState p_51544_, Level p_51545_, BlockPos p_51546_, boolean p_51547_) {
         BiPredicate<LevelAccessor, BlockPos> bipredicate;
-        bipredicate = (world, pos) -> {
-            return false;
-        };
-        return DoubleBlockCombiner.combineWithNeigbour(this.blockEntityType.get(), SarcophagusBlock::getBlockType, SarcophagusBlock::getConnectedDirection, FACING, p_51544_, p_51545_, p_51546_, bipredicate);
+        bipredicate = (world, pos) -> false;
+        return DoubleBlockCombiner.combineWithNeigbour(TGTileEntities.SARCOPHAGUS_BLOCK_ENTITY.get(), SarcophagusBlock::getBlockType, SarcophagusBlock::getConnectedDirection, FACING, p_51544_, p_51545_, p_51546_, bipredicate);
     }
-
 
     public BlockEntityType<? extends SarcophagusBlockEntity> blockEntityType() {
-        return this.blockEntityType.get();
+        return TGTileEntities.SARCOPHAGUS_BLOCK_ENTITY.get();
     }
-
-
-
-
 
 }

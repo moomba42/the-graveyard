@@ -712,10 +712,11 @@ public class LichEntity extends Monster implements GeoEntity {
         return false;
     }
 
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public MobType getMobType() {
+//        return MobType.UNDEAD;
+//    }
 
     @Override
     protected boolean canRide(Entity p_20339_) {
