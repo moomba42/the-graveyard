@@ -9,11 +9,13 @@ import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -76,10 +78,11 @@ public class SkullEntity extends AbstractHurtingProjectile {
             boolean bl;
             if (entity2 instanceof LivingEntity) {
                 LivingEntity livingEntity = (LivingEntity)entity2;
-                bl = entity.hurt(this.damageSources().indirectMagic(this, livingEntity), 10.0F);
+                DamageSource damagesource = this.damageSources().indirectMagic(this, livingEntity);
+                bl = entity.hurt(damagesource, 10.0F);
                 if (bl) {
                     if (entity.isAlive()) {
-                        this.doEnchantDamageEffects(livingEntity, entity);
+                        EnchantmentHelper.doPostAttackEffects((ServerLevel) this.level(), livingEntity, damagesource);
                     }
                 }
             }

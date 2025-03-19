@@ -456,12 +456,12 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
         nbt.putByte("ghoulVariant", getVariant());
         //nbt.put("Ghouling", this.writeNbt(new NbtCompound()));
         if (getStaff() != null) {
-            nbt.put("Staff", getStaff().save(new CompoundTag()));
+            nbt.put("Staff", getStaff().save(this.registryAccess()));
         }
         if (inventory != null) {
             final ListTag inv = new ListTag();
             for (int i = 0; i < this.inventory.getContainerSize(); i++) {
-                inv.add(inventory.getItem(i).save(new CompoundTag()));
+                inv.add(inventory.getItem(i).save(this.registryAccess()));
             }
             nbt.put("Inventory", inv);
         }
@@ -473,13 +473,13 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
         this.setHasCoffin(nbt.getBoolean("CoffinGhouling"));
         this.setVariant(nbt.getByte("ghoulVariant"));
         if (nbt.contains("Staff")) {
-            setStaff(ItemStack.of(nbt.getCompound("Staff")));
+            setStaff(ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Staff")));
         }
         if (nbt.contains("Inventory")) {
             final ListTag inv = nbt.getList("Inventory", 10);
             inventory = new SimpleContainer(inv.size());
             for (int i = 0; i < inv.size(); i++) {
-                inventory.setItem(i, ItemStack.of(inv.getCompound(i)));
+                inventory.setItem(i, ItemStack.parseOptional(this.registryAccess(), inv.getCompound(i)));
             }
         }
     }

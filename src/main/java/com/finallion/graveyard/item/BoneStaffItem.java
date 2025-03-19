@@ -4,6 +4,8 @@ import com.finallion.graveyard.entities.GhoulingEntity;
 import com.finallion.graveyard.entities.GraveyardMinionEntity;
 import com.finallion.graveyard.init.TGEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -66,15 +69,18 @@ public class BoneStaffItem extends Item {
         if (player != null && !world.isClientSide()) {
             // TAG OWNER UUID CHECK
             /* Does the OwnerUUID in the NBT match the user of the staff*/
-            if (stack.getTag() != null && stack.getTag().contains("OwnerUUID")) {
-                if (stack.getTag().getUUID("OwnerUUID").compareTo(player.getUUID()) != 0) {
+            CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+            CompoundTag tag = customData == null ? null : customData.copyTag();
+
+            if (tag != null && tag.contains("OwnerUUID")) {
+                if (tag.getUUID("OwnerUUID").compareTo(player.getUUID()) != 0) {
                     return InteractionResult.PASS;
                 }
             }
 
             /* Is the Ghouling with the UUID saved in the NBT still alive?*/
-            if (stack.getTag() != null && stack.getTag().contains("GhoulingUUID")) {
-                if (ownerGhoulingMapping.containsKey(stack.getTag().getUUID("GhoulingUUID"))) {
+            if (tag != null && tag.contains("GhoulingUUID")) {
+                if (ownerGhoulingMapping.containsKey(tag.getUUID("GhoulingUUID"))) {
                     return InteractionResult.PASS;
                 }
             }
@@ -91,15 +97,25 @@ public class BoneStaffItem extends Item {
             ghouling.setVariant(ghoulVariant);
 
             /* TAG INPUTS BOUND TO ITEM STACK */
-            stack.getOrCreateTag().putUUID("GhoulingUUID", ghouling.getUUID());
-
-            if (!stack.getTag().contains("OwnerUUID")) {
-                stack.getOrCreateTag().putUUID("OwnerUUID", player.getUUID());
+            if(customData == null) {
+                tag = new CompoundTag();
+                tag.putUUID("OwnerUUID", player.getUUID());
+                tag.putUUID("GhoulingUUID", ghouling.getUUID());
+                customData = CustomData.of(new CompoundTag());
+                stack.applyComponents(DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, customData).build());
                 player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.spawn"), true);
             } else {
-                player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.respawn"), true);
+                tag = customData.copyTag();
+                tag.putUUID("GhoulingUUID", ghouling.getUUID());
+                if(!tag.contains("OwnerUUID")) {
+                    tag.putUUID("OwnerUUID", player.getUUID());
+                    player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.spawn"), true);
+                } else {
+                    player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.respawn"), true);
+                }
+                customData = CustomData.of(tag);
+                stack.applyComponents(DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, customData).build());
             }
-
 
             /* END TAG INPUT */
             ownerGhoulingMapping.putIfAbsent(ghouling.getUUID(), player.getUUID());
@@ -117,7 +133,7 @@ public class BoneStaffItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack stack = user.getMainHandItem();
-        CompoundTag nbt = stack.getTag();
+        CompoundTag nbt = stack.getComponents().get(DataComponents.CUSTOM_DATA).copyTag();
         if (!world.isClientSide) {
             if (nbt != null && nbt.contains("GhoulingUUID") && nbt.contains("OwnerUUID")) {
                 if (user.getUUID().compareTo(nbt.getUUID("OwnerUUID")) != 0) { // case wrong owner

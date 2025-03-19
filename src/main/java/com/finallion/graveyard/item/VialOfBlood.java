@@ -1,11 +1,14 @@
 package com.finallion.graveyard.item;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,7 +22,8 @@ public class VialOfBlood extends Item {
     }
 
     public static float getBlood(ItemStack stack) {
-        CompoundTag nbtCompound = stack.getTag();
+        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+        CompoundTag nbtCompound = customData == null ? null : customData.copyTag();
         if (nbtCompound == null) {
             return 0.1F;
         } else {
@@ -28,28 +32,31 @@ public class VialOfBlood extends Item {
     }
 
     public static void setBlood(ItemStack stack, float blood) {
-        CompoundTag nbtCompound = stack.getOrCreateTag();
-        if (blood < 0.9F) {
-            nbtCompound.putFloat(BlOOD_KEY, blood);
+        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+        CompoundTag tag = customData == null ? new CompoundTag() : customData.copyTag();
+        if(blood < 0.9F) {
+            tag.putFloat(BlOOD_KEY, blood);
         }
+        stack.applyComponents(DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, CustomData.of(tag)).build());
     }
 
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         float blood = 0;
-        if (stack.hasTag()) {
-            blood = stack.getTag().getFloat(BlOOD_KEY);
+        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+        if (customData != null && !customData.isEmpty()) {
+            blood = customData.copyTag().getFloat(BlOOD_KEY);
         }
 
         if (blood > 0.8F && blood < 0.9F) {
-            tooltip.add(Component.translatable("Blood level: full").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("Blood level: full").withStyle(ChatFormatting.GRAY));
         } else {
             int level = (int)(blood * 10);
             if (level == 0) {
-                tooltip.add(Component.translatable("Blood level: 1/8").withStyle(ChatFormatting.GRAY));
+                tooltipComponents.add(Component.translatable("Blood level: 1/8").withStyle(ChatFormatting.GRAY));
             } else {
-                tooltip.add(Component.translatable("Blood level: " + level + "/8").withStyle(ChatFormatting.GRAY));
+                tooltipComponents.add(Component.translatable("Blood level: " + level + "/8").withStyle(ChatFormatting.GRAY));
             }
         }
 

@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.PacketUtils;
@@ -35,6 +36,8 @@ public class ClientPlayNetworkHandlerMixin {
     @Shadow
     private Minecraft minecraft;
 
+    @Shadow @Final private RegistryAccess.Frozen registryAccess;
+
     @Inject(method = "handleOpenSignEditor", at = @At(value = "HEAD"), cancellable = true)
     public void handleOpenSignEditor(ClientboundOpenSignEditorPacket packet, CallbackInfo info) {
         PacketUtils.ensureRunningOnSameThread(packet, (ClientGamePacketListener) this, this.minecraft);
@@ -58,7 +61,7 @@ public class ClientPlayNetworkHandlerMixin {
         if (blockEntity instanceof GravestoneBlockEntity) {
             CompoundTag tag = p_104976_.getTag();
             if (tag != null) {
-                blockEntity.load(tag);
+                ((GravestoneBlockEntity) blockEntity).loadAdditional(tag, this.registryAccess);
             }
             info.cancel();
         }

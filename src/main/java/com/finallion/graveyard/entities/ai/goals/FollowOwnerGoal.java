@@ -127,16 +127,16 @@ public class FollowOwnerGoal extends Goal {
     }
 
 
-    private boolean canTeleportTo(BlockPos p_25308_) {
-        PathType blockpathtypes = WalkNodeEvaluator.getPathTypeStatic(this.level, p_25308_.mutable()); // TODO: Figure this out
+    private boolean canTeleportTo(BlockPos pos) {
+        PathType blockpathtypes = WalkNodeEvaluator.getPathTypeStatic(this.tamable, pos.mutable());
         if (blockpathtypes != PathType.WALKABLE) {
             return false;
         } else {
-            BlockState blockstate = this.level.getBlockState(p_25308_.below());
+            BlockState blockstate = this.level.getBlockState(pos.below());
             if (!this.canFly && blockstate.getBlock() instanceof LeavesBlock) {
                 return false;
             } else {
-                BlockPos blockpos = p_25308_.subtract(this.tamable.blockPosition());
+                BlockPos blockpos = pos.subtract(this.tamable.blockPosition());
                 return this.level.noCollision(this.tamable, this.tamable.getBoundingBox().move(blockpos));
             }
         }
