@@ -7,6 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -37,13 +38,13 @@ import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-import java.util.UUID;
-
 
 public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-    private static final UUID SLOWNESS_ID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A4");
-    private static final AttributeModifier SLOWNESS_EFFECT;
+    private static final ResourceLocation SLOWNESS_EFFECT_ID = ResourceLocation.withDefaultNamespace("effect.slowness");
+    private static final AttributeModifier SLOWNESS_EFFECT = new AttributeModifier(
+            SLOWNESS_EFFECT_ID, -0.3F, AttributeModifier.Operation.ADD_VALUE
+    );
 
     private static final EntityDataAccessor<Integer> ATTACK_ANIM_TIMER;
     private static final EntityDataAccessor<Integer> REANIMATE_ANIM_TIMER;
@@ -139,12 +140,12 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
         AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (getReanimateAnimTimer() > 0) {
             this.getLookControl().setLookAt(this.getX(), this.getY(), this.getZ());
-            if (!entityAttributeInstance.hasModifier(SLOWNESS_EFFECT)) {
+            if (!entityAttributeInstance.hasModifier(SLOWNESS_EFFECT_ID)) {
                 entityAttributeInstance.addTransientModifier(SLOWNESS_EFFECT);
             }
         } else {
-            if (entityAttributeInstance.hasModifier(SLOWNESS_EFFECT)) {
-                entityAttributeInstance.removeModifier(SLOWNESS_EFFECT);
+            if (entityAttributeInstance.hasModifier(SLOWNESS_EFFECT_ID)) {
+                entityAttributeInstance.removeModifier(SLOWNESS_EFFECT_ID);
             }
         }
 
@@ -320,7 +321,6 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
         REANIMATE_ANIM_TIMER = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.INT);
         ANIMATION = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.INT);
         CAN_REANIMATE = SynchedEntityData.defineId(RevenantEntity.class, EntityDataSerializers.BOOLEAN);
-        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADD_VALUE);
     }
 
 

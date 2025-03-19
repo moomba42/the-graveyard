@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -71,12 +72,12 @@ public class LichEntity extends Monster implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     protected static final TargetingConditions HEAD_TARGET_PREDICATE;
     private static final Predicate<LivingEntity> CAN_ATTACK_PREDICATE;
-    private static final UUID ATTACKING_SPEED_BOOST_ID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-    private static final UUID ATTACKING_DMG_BOOST_ID = UUID.fromString("120E0DFB-87AE-4653-9776-831010E291A1");
-    private static final UUID CRAWL_SPEED_BOOST_ID = UUID.fromString("120E0DFB-87AE-1978-9776-831010E291A2");
-    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, "Crawl speed boost", 0.18D, AttributeModifier.Operation.ADD_VALUE);;
-    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(ATTACKING_SPEED_BOOST_ID, "Attacking speed boost", GraveyardConfig.COMMON.speedInHuntPhase.get(), AttributeModifier.Operation.ADD_VALUE);
-    private static final AttributeModifier DMG_BOOST = new AttributeModifier(ATTACKING_DMG_BOOST_ID, "Damage speed boost", GraveyardConfig.COMMON.damageHuntingPhaseAddition.get(), AttributeModifier.Operation.ADD_VALUE);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = ResourceLocation.withDefaultNamespace("attacking");
+    private static final ResourceLocation DAMAGE_BOOST_ID = ResourceLocation.withDefaultNamespace("effect.strength");
+    private static final ResourceLocation CRAWL_SPEED_BOOST_ID = ResourceLocation.withDefaultNamespace("enchantment.swift_sneak");
+    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, 0.18D, AttributeModifier.Operation.ADD_VALUE);;
+    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, GraveyardConfig.COMMON.speedInHuntPhase.get(), AttributeModifier.Operation.ADD_VALUE);
+    private static final AttributeModifier DMG_BOOST = new AttributeModifier(DAMAGE_BOOST_ID, GraveyardConfig.COMMON.damageHuntingPhaseAddition.get(), AttributeModifier.Operation.ADD_VALUE);
     // animation
     private final RawAnimation SPAWN_ANIMATION = RawAnimation.begin().then("spawn", Animation.LoopType.PLAY_ONCE);
     private final RawAnimation IDLE_ANIMATION = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
@@ -444,7 +445,7 @@ public class LichEntity extends Monster implements GeoEntity {
             AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
             setCanMove(true);
             setAnimationState(ANIMATION_PHASE_3_ATTACK);
-            if (!entityAttributeInstance.hasModifier(CRAWL_SPEED_BOOST)) {
+            if (!entityAttributeInstance.hasModifier(CRAWL_SPEED_BOOST_ID)) {
                 entityAttributeInstance.addTransientModifier(CRAWL_SPEED_BOOST);
             }
         }
@@ -495,11 +496,11 @@ public class LichEntity extends Monster implements GeoEntity {
                 }
                 setAnimationState(ANIMATION_PHASE_2_ATTACK);
 
-                if (!entityAttributeInstance.hasModifier(ATTACKING_SPEED_BOOST)) {
+                if (!entityAttributeInstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                     entityAttributeInstance.addTransientModifier(ATTACKING_SPEED_BOOST);
                 }
 
-                if (!entityAttributeDmgInstance.hasModifier(DMG_BOOST)) {
+                if (!entityAttributeDmgInstance.hasModifier(DAMAGE_BOOST_ID)) {
                     entityAttributeDmgInstance.addTransientModifier(DMG_BOOST);
                 }
             }

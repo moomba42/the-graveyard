@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.TimeUtil;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -22,8 +23,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public abstract class AngerableGraveyardEntity extends HordeGraveyardEntity implements NeutralMob {
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", (double)0.15F, AttributeModifier.Operation.ADD_VALUE);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = ResourceLocation.withDefaultNamespace("attacking");
+    private static final AttributeModifier SPEED_MODIFIER_ATTACKING = new AttributeModifier(
+            SPEED_MODIFIER_ATTACKING_ID, 0.15F, AttributeModifier.Operation.ADD_VALUE
+    );
     private static final EntityDataAccessor<Boolean> ANGRY = SynchedEntityData.defineId(AngerableGraveyardEntity.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDataAccessor<Boolean> PROVOKED = SynchedEntityData.defineId(AngerableGraveyardEntity.class, EntityDataSerializers.BOOLEAN);
     private static final UniformInt ANGER_TIME = TimeUtil.rangeOfSeconds(20, 39);
@@ -96,11 +99,11 @@ public abstract class AngerableGraveyardEntity extends HordeGraveyardEntity impl
             this.ageWhenTargetSet = 0;
             this.entityData.set(ANGRY, false);
             this.entityData.set(PROVOKED, false);
-            attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING);
+            attributeinstance.removeModifier(SPEED_MODIFIER_ATTACKING_ID);
         } else {
             this.ageWhenTargetSet = this.tickCount;
             this.entityData.set(ANGRY, true);
-            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING)) {
+            if (!attributeinstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                 attributeinstance.addTransientModifier(SPEED_MODIFIER_ATTACKING);
             }
         }
