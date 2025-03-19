@@ -14,6 +14,7 @@ import com.finallion.graveyard.util.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -49,6 +50,9 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
@@ -400,13 +404,10 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
                 if (this.inventory != null) {
                     for (int i = 0; i < this.inventory.getContainerSize(); i++) {
                         ItemStack stack = this.inventory.getItem(i);
-                        // TODO: Fix this
-//                        if (!stack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(stack)) {
-//                            this.spawnAtLocation(stack);
-//                        }
-                        if (!stack.isEmpty() && !stack.getEnchantmentLevel(Registries.ENCHANTMENT)) {
+                        if (!stack.isEmpty() && !EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
                             this.spawnAtLocation(stack);
                         }
+
                     }
                 }
             }
