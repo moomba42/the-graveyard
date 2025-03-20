@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "graveyard:pedestal",
+    "id": "graveyard:pedestal",
     "count": 1
   }
 }

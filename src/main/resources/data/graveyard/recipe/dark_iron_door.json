@@ -11,7 +11,7 @@
     }
   },
   "result": {
-    "item": "graveyard:dark_iron_door",
+    "id": "graveyard:dark_iron_door",
     "count": 3
   }
 }

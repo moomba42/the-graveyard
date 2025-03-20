@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "graveyard:fire_brazier",
+    "id": "graveyard:fire_brazier",
     "count": 1
   }
 }

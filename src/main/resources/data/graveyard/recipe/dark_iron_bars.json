@@ -10,7 +10,7 @@
     }
   },
   "result": {
-    "item": "graveyard:dark_iron_bars",
+    "id": "graveyard:dark_iron_bars",
     "count": 16
   }
 }
