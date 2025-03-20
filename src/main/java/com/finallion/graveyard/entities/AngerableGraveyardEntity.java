@@ -49,8 +49,8 @@ public abstract class AngerableGraveyardEntity extends HordeGraveyardEntity impl
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(ANGRY, false);
-        this.entityData.set(PROVOKED, false);
+        builder.define(ANGRY, false);
+        builder.define(PROVOKED, false);
     }
 
     public void addAdditionalSaveData(CompoundTag p_32520_) {

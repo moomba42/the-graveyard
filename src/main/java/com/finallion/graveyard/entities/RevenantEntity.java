@@ -78,10 +78,10 @@ public class RevenantEntity extends AngerableGraveyardEntity implements GeoEntit
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
-        this.entityData.set(ATTACK_ANIM_TIMER, 0);
-        this.entityData.set(REANIMATE_ANIM_TIMER, 0);
-        this.entityData.set(CAN_REANIMATE, true);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(REANIMATE_ANIM_TIMER, 0);
+        builder.define(CAN_REANIMATE, true);
     }
 
     protected void registerGoals() {

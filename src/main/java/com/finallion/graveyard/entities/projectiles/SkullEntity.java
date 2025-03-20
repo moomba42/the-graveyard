@@ -118,7 +118,8 @@ public class SkullEntity extends AbstractHurtingProjectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
-        this.entityData.set(CHARGED, false);
+        super.defineSynchedData(builder);
+        builder.define(CHARGED, false);
     }
 
     public boolean isDangerous() {

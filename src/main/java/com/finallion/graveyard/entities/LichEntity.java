@@ -1081,22 +1081,22 @@ public class LichEntity extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(CAN_MOVE, false);
-        this.entityData.set(INVUL_TIMER, 0);
-        this.entityData.set(MUSIC_DELAY, 0);
-        this.entityData.set(HUNT_TIMER, 0);
-        this.entityData.set(FIGHT_DURATION_TIMER, 0);
-        this.entityData.set(HEAL_DURATION_TIMER, 0);
-        this.entityData.set(LEVITATION_DURATION_TIMER, 0);
-        this.entityData.set(CORPSE_SPELL_DURATION_TIMER, 0);
-        this.entityData.set(PHASE_INVUL_TIMER, 0);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
-        this.entityData.set(ATTACK_ANIM_TIMER, 0);
-        this.entityData.set(CONJURE_FANG_TIMER, 0);
-        this.entityData.set(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
-        this.entityData.set(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
-        this.entityData.set(PHASE, 1);
-        this.entityData.set(CAN_HUNT_START, false);
+        builder.define(CAN_MOVE, false);
+        builder.define(INVUL_TIMER, 0);
+        builder.define(MUSIC_DELAY, 0);
+        builder.define(HUNT_TIMER, 0);
+        builder.define(FIGHT_DURATION_TIMER, 0);
+        builder.define(HEAL_DURATION_TIMER, 0);
+        builder.define(LEVITATION_DURATION_TIMER, 0);
+        builder.define(CORPSE_SPELL_DURATION_TIMER, 0);
+        builder.define(PHASE_INVUL_TIMER, 0);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(CONJURE_FANG_TIMER, 0);
+        builder.define(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
+        builder.define(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
+        builder.define(PHASE, 1);
+        builder.define(CAN_HUNT_START, false);
     }
 
     // on game stop

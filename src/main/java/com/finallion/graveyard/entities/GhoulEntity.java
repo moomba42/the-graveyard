@@ -89,12 +89,12 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
         // selects one of eight skins for the ghoul (in BaseGhoulModel)
         byte variant = (byte) ((byte) random.nextInt(8) + (byte)1);
 
-        this.entityData.set(VARIANT, variant);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
-        this.entityData.set(ATTACK_ANIM_TIMER, 0);
-        this.entityData.set(RAGE_ANIM_TIMER, 0);
-        this.entityData.set(SPAWN_TIMER, 32);
-        this.entityData.set(IS_RAGING, false);
+        builder.define(VARIANT, variant);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(RAGE_ANIM_TIMER, 0);
+        builder.define(SPAWN_TIMER, 32);
+        builder.define(IS_RAGING, false);
     }
 
     protected void registerGoals() {

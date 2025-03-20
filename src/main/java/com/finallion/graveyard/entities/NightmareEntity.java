@@ -89,10 +89,10 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(DATA_CREEPY, false);
-        this.entityData.set(DATA_STARED_AT, false);
-        this.entityData.set(ATTACK_ANIM_TIMER, 0);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
+        builder.define(DATA_CREEPY, false);
+        builder.define(DATA_STARED_AT, false);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(ANIMATION, ANIMATION_IDLE);
     }
 
     public int getAnimationState() {

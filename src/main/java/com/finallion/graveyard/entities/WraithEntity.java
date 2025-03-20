@@ -16,13 +16,21 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -46,11 +54,9 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.animation.Animation;
 import software.bernie.geckolib.animation.AnimationController;
-import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -148,9 +154,8 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
         spawnTimer = 20;
-        setAnimation(ANIMATION_SPAWN);
+        builder.define(ANIMATION, ANIMATION_SPAWN);
     }
 
     public void tick() {
@@ -255,10 +260,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
         ++this.timeSinceExtinguish;
     }
 
-    public boolean hasHomePosition() {
-        return this.homePosition != null;
-    }
-
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
@@ -277,16 +278,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.FLYING_SPEED, 0.35);
     }
-
-
-    public byte getAnimation() {
-        return entityData.get(ANIMATION);
-    }
-
-    public void setAnimation(byte animation) {
-        entityData.set(ANIMATION, animation);
-    }
-
 
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController(this, "controller", 2, event -> {
@@ -313,7 +304,7 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
             return PlayState.CONTINUE;
         }));
         data.add(new AnimationController(this, "controller2", 0, event -> {
-            if (getAnimation() == 0) {
+            if (this.entityData.get(ANIMATION) == 0) {
                 event.getController().setAnimation(SPAWN_ANIMATION);
                 spawned = true;
 
@@ -327,14 +318,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
-    }
-
-
-    boolean closerThan(BlockPos pos, int distance) {
-        if (pos == null) {
-            return false;
-        }
-        return pos.closerThan(this.getOnPos(), (double) distance);
     }
 
     @Override

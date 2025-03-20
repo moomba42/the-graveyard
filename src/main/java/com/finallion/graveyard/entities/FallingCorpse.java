@@ -97,8 +97,8 @@ public class FallingCorpse extends Monster implements GeoEntity {
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(IS_FALLING, true);
-        this.entityData.set(HAS_COLLIDED, false);
+        builder.define(IS_FALLING, true);
+        builder.define(HAS_COLLIDED, false);
     }
 
 

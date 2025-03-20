@@ -132,13 +132,13 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
-        this.entityData.set(ANIMATION, ANIMATION_IDLE);
-        this.entityData.set(STAFF, ItemStack.EMPTY);
-        this.entityData.set(ATTACK_ANIM_TIMER, 0);
-        this.entityData.set(COFFIN, false);
-        this.entityData.set(SPAWN_TIMER, 0);
-        this.entityData.set(TELEPORT_TIMER, 0);
-        this.entityData.set(VARIANT, (byte)0);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(STAFF, ItemStack.EMPTY);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(COFFIN, false);
+        builder.define(SPAWN_TIMER, 0);
+        builder.define(TELEPORT_TIMER, 0);
+        builder.define(VARIANT, (byte)0);
         //this.dataTracker.startTracking(CAN_COLLECT, false);
     }
 
