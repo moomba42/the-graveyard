@@ -20,7 +20,8 @@ import net.minecraft.world.level.Level;
 
 import java.util.List;
 
-public class OssuaryScreenHandler extends AbstractContainerMenu {
+public class OssuaryMenu extends AbstractContainerMenu {
+    // TODO: Figure out where those constants are used in this file
     public static final int INPUT_SLOT = 0;
     public static final int RESULT_SLOT = 1;
     private static final int INV_SLOT_START = 2;
@@ -35,52 +36,51 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
     long lastSoundTime;
     final Slot inputSlot;
     final Slot resultSlot;
-    Runnable slotUpdateListener = () -> {
-    };
+    Runnable slotUpdateListener = () -> { };
     public final Container container = new SimpleContainer(1) {
         public void setChanged() {
             super.setChanged();
-            OssuaryScreenHandler.this.slotsChanged(this);
-            OssuaryScreenHandler.this.slotUpdateListener.run();
+            OssuaryMenu.this.slotsChanged(this);
+            OssuaryMenu.this.slotUpdateListener.run();
         }
     };
     final ResultContainer resultContainer = new ResultContainer();
 
-    public OssuaryScreenHandler(int p_40294_, Inventory p_40295_) {
-        this(p_40294_, p_40295_, ContainerLevelAccess.NULL);
+    public OssuaryMenu(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory, ContainerLevelAccess.NULL);
     }
 
-    public OssuaryScreenHandler(int containerId, Inventory playerInventory, final ContainerLevelAccess access) {
+    public OssuaryMenu(int containerId, Inventory playerInventory, final ContainerLevelAccess access) {
         super(MenuType.STONECUTTER, containerId);
         this.access = access;
         this.level = playerInventory.player.level();
         this.inputSlot = this.addSlot(new Slot(this.container, 0, 20, 33));
         this.resultSlot = this.addSlot(new Slot(this.resultContainer, 1, 143, 33) {
-            public boolean mayPlace(ItemStack p_40362_) {
+            public boolean mayPlace(ItemStack stack) {
                 return false;
             }
 
-            public void onTake(Player p_150672_, ItemStack p_150673_) {
-                p_150673_.onCraftedBy(p_150672_.level(), p_150672_, p_150673_.getCount());
-                OssuaryScreenHandler.this.resultContainer.awardUsedRecipes(p_150672_, this.getRelevantItems());
-                ItemStack itemstack = OssuaryScreenHandler.this.inputSlot.remove(1);
+            public void onTake(Player player, ItemStack stack) {
+                stack.onCraftedBy(player.level(), player, stack.getCount());
+                OssuaryMenu.this.resultContainer.awardUsedRecipes(player, this.getRelevantItems());
+                ItemStack itemstack = OssuaryMenu.this.inputSlot.remove(1);
                 if (!itemstack.isEmpty()) {
-                    OssuaryScreenHandler.this.setupResultSlot();
+                    OssuaryMenu.this.setupResultSlot();
                 }
 
-                access.execute((p_40364_, p_40365_) -> {
-                    long l = p_40364_.getGameTime();
-                    if (OssuaryScreenHandler.this.lastSoundTime != l) {
-                        p_40364_.playSound((Player)null, p_40365_, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, -3.0F);
-                        OssuaryScreenHandler.this.lastSoundTime = l;
+                access.execute((level, pos) -> {
+                    long l = level.getGameTime();
+                    if (OssuaryMenu.this.lastSoundTime != l) {
+                        level.playSound(null, pos, SoundEvents.CHAIN_BREAK, SoundSource.BLOCKS, 1.0F, -3.0F);
+                        OssuaryMenu.this.lastSoundTime = l;
                     }
 
                 });
-                super.onTake(p_150672_, p_150673_);
+                super.onTake(player, stack);
             }
 
             private List<ItemStack> getRelevantItems() {
-                return List.of(OssuaryScreenHandler.this.inputSlot.getItem());
+                return List.of(OssuaryMenu.this.inputSlot.getItem());
             }
         });
 
@@ -113,28 +113,29 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
         return this.inputSlot.hasItem() && !this.recipes.isEmpty();
     }
 
-    public boolean stillValid(Player p_40307_) {
-        return stillValid(this.access, p_40307_, TGBlocks.OSSUARY.get());
+    public boolean stillValid(Player player) {
+        return stillValid(this.access, player, TGBlocks.OSSUARY.get());
     }
 
-    public boolean clickMenuButton(Player p_40309_, int p_40310_) {
-        if (this.isValidRecipeIndex(p_40310_)) {
-            this.selectedRecipeIndex.set(p_40310_);
+    public boolean clickMenuButton(Player player, int id) {
+        if (this.isValidRecipeIndex(id)) {
+            this.selectedRecipeIndex.set(id);
             this.setupResultSlot();
         }
 
         return true;
     }
 
-    private boolean isValidRecipeIndex(int p_40335_) {
-        return p_40335_ >= 0 && p_40335_ < this.recipes.size();
+    private boolean isValidRecipeIndex(int recipeIndex) {
+        return recipeIndex >= 0 && recipeIndex < this.recipes.size();
     }
 
-    public void slotsChanged(Container p_40302_) {
+    @Override
+    public void slotsChanged(Container inventory) {
         ItemStack itemstack = this.inputSlot.getItem();
         if (!itemstack.is(this.input.getItem())) {
             this.input = itemstack.copy();
-            this.setupRecipeList(p_40302_, itemstack);
+            this.setupRecipeList(inventory, itemstack);
         }
 
     }
@@ -170,34 +171,35 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
         this.broadcastChanges();
     }
 
-
+    @Override
     public MenuType<?> getType() {
         return TGScreens.OSSUARY_SCREEN_HANDLER.get();
     }
 
-    public void registerUpdateListener(Runnable p_40324_) {
-        this.slotUpdateListener = p_40324_;
+    public void registerUpdateListener(Runnable listener) {
+        this.slotUpdateListener = listener;
     }
 
-    public boolean canTakeItemForPickAll(ItemStack p_40321_, Slot p_40322_) {
-        return p_40322_.container != this.resultContainer && super.canTakeItemForPickAll(p_40321_, p_40322_);
+    @Override
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+        return slot.container != this.resultContainer && super.canTakeItemForPickAll(stack, slot);
     }
 
-    public ItemStack quickMoveStack(Player p_40328_, int p_40329_) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(p_40329_);
+        Slot slot = this.slots.get(index);
         if (slot != null && slot.hasItem()) {
             ItemStack itemstack1 = slot.getItem();
             Item item = itemstack1.getItem();
             itemstack = itemstack1.copy();
-            if (p_40329_ == 1) {
-                item.onCraftedBy(itemstack1, p_40328_.level(), p_40328_);
+            if (index == 1) {
+                item.onCraftedBy(itemstack1, player.level(), player);
                 if (!this.moveItemStackTo(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }
 
                 slot.onQuickCraft(itemstack1, itemstack);
-            } else if (p_40329_ == 0) {
+            } else if (index == 0) {
                 if (!this.moveItemStackTo(itemstack1, 2, 38, false)) {
                     return ItemStack.EMPTY;
                 }
@@ -205,11 +207,11 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
                 if (!this.moveItemStackTo(itemstack1, 0, 1, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (p_40329_ >= 2 && p_40329_ < 29) {
+            } else if (index >= 2 && index < 29) {
                 if (!this.moveItemStackTo(itemstack1, 29, 38, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (p_40329_ >= 29 && p_40329_ < 38 && !this.moveItemStackTo(itemstack1, 2, 29, false)) {
+            } else if (index >= 29 && index < 38 && !this.moveItemStackTo(itemstack1, 2, 29, false)) {
                 return ItemStack.EMPTY;
             }
 
@@ -222,18 +224,19 @@ public class OssuaryScreenHandler extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(p_40328_, itemstack1);
+            slot.onTake(player, itemstack1);
             this.broadcastChanges();
         }
 
         return itemstack;
     }
 
-    public void removed(Player p_40326_) {
-        super.removed(p_40326_);
+    @Override
+    public void removed(Player player) {
+        super.removed(player);
         this.resultContainer.removeItemNoUpdate(1);
-        this.access.execute((p_40313_, p_40314_) -> {
-            this.clearContainer(p_40326_, this.container);
+        this.access.execute((level, pos) -> {
+            this.clearContainer(player, this.container);
         });
     }
 }
