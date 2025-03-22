@@ -97,7 +97,7 @@ public class TGBlocks {
     public static final Supplier<GravestoneBlockOld> GILDED_BLACKSTONE_GRAVESTONE = BLOCKS.register("gilded_blackstone_gravestone", () -> new GravestoneBlockOld(GILDED_BLACKSTONE_GRAVESTONE_TEXTURE));
     public static final Supplier<GravestoneBlockOld> QUARTZ_BRICKS_GRAVESTONE = BLOCKS.register("quartz_bricks_gravestone", () -> new GravestoneBlockOld(QUARTZ_BRICKS_GRAVESTONE_TEXTURE));
 
-    public static final Supplier<GravestoneBlock2> GRAVESTONE2 = BLOCKS.register("gravestone2", () -> new GravestoneBlock2(GravestoneType.MOSSY_COBBLESTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().sound(SoundType.BASALT).strength(1.5F)));
+    public static final Supplier<GravestoneBlock> GRAVESTONE2 = BLOCKS.register("gravestone2", () -> new GravestoneBlock(GravestoneType.MOSSY_COBBLESTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().sound(SoundType.BASALT).strength(1.5F)));
 
     public static final Supplier<UrnBlock> BLACK_URN = BLOCKS.register("black_urn", () -> new UrnBlock());
     public static final Supplier<UrnBlock> BROWN_URN = BLOCKS.register("brown_urn", () -> new UrnBlock());

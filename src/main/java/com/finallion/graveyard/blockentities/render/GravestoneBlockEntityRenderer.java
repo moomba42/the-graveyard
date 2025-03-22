@@ -1,6 +1,6 @@
 package com.finallion.graveyard.blockentities.render;
 
-import com.finallion.graveyard.blockentities.GravestoneBlockEntity2;
+import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
@@ -28,19 +28,19 @@ import java.util.List;
 
 
 @OnlyIn(Dist.CLIENT)
-public class GravestoneBlockEntity2Renderer implements BlockEntityRenderer<GravestoneBlockEntity2> {
+public class GravestoneBlockEntityRenderer implements BlockEntityRenderer<GravestoneBlockEntity> {
     private static final int BLACK_TEXT_OUTLINE_COLOR = 0xFFF0EBCC;
     private static final int OUTLINE_RENDER_DISTANCE = Mth.square(16);
     private static final float RENDER_SCALE = 0.6666667F;
     private static final Vec3 TEXT_OFFSET = new Vec3(0.0, 0.07, 0.22);
     private final Font font;
 
-    public GravestoneBlockEntity2Renderer(BlockEntityRendererProvider.Context context) {
+    public GravestoneBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         this.font = context.getFont();
     }
 
     @Override
-    public void render(GravestoneBlockEntity2 blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+    public void render(GravestoneBlockEntity blockEntity, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         BlockState blockstate = blockEntity.getBlockState();
         SignBlock signblock = (SignBlock) blockstate.getBlock();
         this.renderSignWithText(blockEntity, poseStack, bufferSource, packedLight, packedOverlay, blockstate, signblock);
@@ -50,7 +50,7 @@ public class GravestoneBlockEntity2Renderer implements BlockEntityRenderer<Grave
         return RENDER_SCALE;
     }
 
-    void renderSignWithText(GravestoneBlockEntity2 signEntity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay, BlockState state, SignBlock signBlock) {
+    void renderSignWithText(GravestoneBlockEntity signEntity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay, BlockState state, SignBlock signBlock) {
         poseStack.pushPose();
         this.translateSign(poseStack, -signBlock.getYRotationDegrees(state), state);
         this.renderSign(signEntity, poseStack, buffer, packedLight, packedOverlay);
@@ -64,7 +64,7 @@ public class GravestoneBlockEntity2Renderer implements BlockEntityRenderer<Grave
         poseStack.mulPose(Axis.YP.rotationDegrees(yRot));
     }
 
-    void renderSign(GravestoneBlockEntity2 entity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    void renderSign(GravestoneBlockEntity entity, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
         poseStack.pushPose();
 
         poseStack.translate(0, -0.07f, 0);

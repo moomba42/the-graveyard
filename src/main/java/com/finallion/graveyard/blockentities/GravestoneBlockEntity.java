@@ -6,8 +6,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class GravestoneBlockEntity2 extends SignBlockEntity {
-    public GravestoneBlockEntity2(BlockPos pos, BlockState blockState) {
+public class GravestoneBlockEntity extends SignBlockEntity {
+    public GravestoneBlockEntity(BlockPos pos, BlockState blockState) {
         super(TGBlockEntities.GRAVESTONE_BLOCK_ENTITY_2.get(), pos, blockState);
     }
 

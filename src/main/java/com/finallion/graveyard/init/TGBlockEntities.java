@@ -2,8 +2,8 @@ package com.finallion.graveyard.init;
 
 import com.finallion.graveyard.TheGraveyard;
 import com.finallion.graveyard.blockentities.BrazierBlockEntity;
+import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
 import com.finallion.graveyard.blockentities.GravestoneBlockEntityOld;
-import com.finallion.graveyard.blockentities.GravestoneBlockEntity2;
 import com.finallion.graveyard.blockentities.OssuaryBlockEntity;
 import com.finallion.graveyard.blockentities.SarcophagusBlockEntity;
 import com.finallion.graveyard.blockentities.UrnBlockEntity;
@@ -46,10 +46,10 @@ public class TGBlockEntities {
             ).build(null)
     );
 
-    public static final Supplier<BlockEntityType<GravestoneBlockEntity2>> GRAVESTONE_BLOCK_ENTITY_2 = BLOCK_ENTITIES.register(
+    public static final Supplier<BlockEntityType<GravestoneBlockEntity>> GRAVESTONE_BLOCK_ENTITY_2 = BLOCK_ENTITIES.register(
             "gravestone_block_entity_2",
             () -> BlockEntityType.Builder.of(
-                    GravestoneBlockEntity2::new,
+                    GravestoneBlockEntity::new,
                     TGBlocks.GRAVESTONE2.get()
             ).build(null)
     );

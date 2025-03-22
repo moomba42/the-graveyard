@@ -1,7 +1,7 @@
 package com.finallion.graveyard.client.gui;
 
-import com.finallion.graveyard.blockentities.GravestoneBlockEntity2;
-import com.finallion.graveyard.blocks.GravestoneBlock2;
+import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
+import com.finallion.graveyard.blocks.GravestoneBlock;
 import com.finallion.graveyard.world.level.block.state.GravestoneType;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractSignEditScreen;
@@ -13,7 +13,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import org.joml.Vector3f;
 
 @OnlyIn(Dist.CLIENT)
-public class Gravestone2Screen extends AbstractSignEditScreen {
+public class GravestoneScreen extends AbstractSignEditScreen {
     public static final float MAGIC_BACKGROUND_SCALE = 4.5F;
     private static final Vector3f TEXT_SCALE = new Vector3f(1.0F, 1.0F, 1.0F);
     private static final int TEXTURE_WIDTH = 64;
@@ -22,9 +22,9 @@ public class Gravestone2Screen extends AbstractSignEditScreen {
     protected final GravestoneType gravestoneType;
     private final ResourceLocation texture;
 
-    public Gravestone2Screen(GravestoneBlockEntity2 sign, boolean isFrontText, boolean isFiltered) {
+    public GravestoneScreen(GravestoneBlockEntity sign, boolean isFrontText, boolean isFiltered) {
         super(sign, isFrontText, isFiltered, Component.translatable("gravestone.edit"));
-        this.gravestoneType = GravestoneBlock2.getGravestoneTypeFor(sign.getBlockState().getBlock());
+        this.gravestoneType = GravestoneBlock.getGravestoneTypeFor(sign.getBlockState().getBlock());
         this.texture = gravestoneType.texture();
     }
 

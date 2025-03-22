@@ -1,6 +1,6 @@
 package com.finallion.graveyard.blocks;
 
-import com.finallion.graveyard.blockentities.GravestoneBlockEntity2;
+import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
 import com.finallion.graveyard.world.level.block.state.GravestoneType;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -32,17 +32,17 @@ import java.util.List;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 // Based on StandingSignBlock
-public class GravestoneBlock2 extends SignBlock {
-    public static final MapCodec<GravestoneBlock2> CODEC =
+public class GravestoneBlock extends SignBlock {
+    public static final MapCodec<GravestoneBlock> CODEC =
             RecordCodecBuilder.mapCodec(instance -> instance.group(
-                    GravestoneType.CODEC.fieldOf("gravestone_type").forGetter(GravestoneBlock2::getGravestoneType),
+                    GravestoneType.CODEC.fieldOf("gravestone_type").forGetter(GravestoneBlock::getGravestoneType),
                     propertiesCodec()
-            ).apply(instance, GravestoneBlock2::new));
+            ).apply(instance, GravestoneBlock::new));
     private static final VoxelShape SHAPE_FACING_EW = Block.box(4.0D, 0.0D, 0.0D, 12.0D, 16.0D, 16.0D);
     private static final VoxelShape SHAPE_FACING_NS = Block.box(0.0D, 0.0D, 4.0D, 16.0D, 16.0D, 12.0D);
     private final GravestoneType gravestoneType;
 
-    public GravestoneBlock2(GravestoneType type, Properties properties) {
+    public GravestoneBlock(GravestoneType type, Properties properties) {
         super(WoodType.OAK, properties);
         this.gravestoneType = type;
         this.registerDefaultState(this.getStateDefinition().any()
@@ -51,13 +51,13 @@ public class GravestoneBlock2 extends SignBlock {
     }
 
     @Override
-    public MapCodec<GravestoneBlock2> codec() {
+    public MapCodec<GravestoneBlock> codec() {
         return CODEC;
     }
 
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new GravestoneBlockEntity2(pos, state);
+        return new GravestoneBlockEntity(pos, state);
     }
 
     @Override
@@ -119,8 +119,8 @@ public class GravestoneBlock2 extends SignBlock {
     }
 
     public static GravestoneType getGravestoneTypeFor(Block block) {
-        if (block instanceof GravestoneBlock2) {
-            return ((GravestoneBlock2) block).getGravestoneType();
+        if (block instanceof GravestoneBlock) {
+            return ((GravestoneBlock) block).getGravestoneType();
         }
 
         return GravestoneType.POLISHED_BASALT;

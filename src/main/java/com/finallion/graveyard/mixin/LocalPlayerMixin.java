@@ -1,7 +1,7 @@
 package com.finallion.graveyard.mixin;
 
-import com.finallion.graveyard.blockentities.GravestoneBlockEntity2;
-import com.finallion.graveyard.client.gui.Gravestone2Screen;
+import com.finallion.graveyard.blockentities.GravestoneBlockEntity;
+import com.finallion.graveyard.client.gui.GravestoneScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.level.block.entity.SignBlockEntity;
@@ -15,8 +15,8 @@ public class LocalPlayerMixin {
 
     @Inject(method = "openTextEdit", at = @At(value = "HEAD"), cancellable = true)
     public void openTextEdit(SignBlockEntity signEntity, boolean isFrontText, CallbackInfo info) {
-        if (signEntity instanceof GravestoneBlockEntity2 gravestoneBlockEntity) {
-            Minecraft.getInstance().setScreen(new Gravestone2Screen(gravestoneBlockEntity, isFrontText, Minecraft.getInstance().isTextFilteringEnabled()));
+        if (signEntity instanceof GravestoneBlockEntity gravestoneBlockEntity) {
+            Minecraft.getInstance().setScreen(new GravestoneScreen(gravestoneBlockEntity, isFrontText, Minecraft.getInstance().isTextFilteringEnabled()));
             info.cancel();
         }
     }
