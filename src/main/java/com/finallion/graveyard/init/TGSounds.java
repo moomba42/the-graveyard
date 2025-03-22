@@ -92,8 +92,8 @@ public class TGSounds {
 
     public static final Supplier<SoundEvent> VIAL_SPLASH = registerSoundEvent("item.vial.splash");
 
-    public static final DeferredHolder<SoundEvent, SoundEvent> LICH_THEME_01 = registerSoundEvent("entity.lich.theme_01");
-    public static final ResourceKey<JukeboxSong> LICH_THEME_01_KEY = createSong("entity.lich.theme_01");
+    public static final Supplier<SoundEvent> LICH_THEME_01 = registerSoundEvent("entity.lich.theme_01");
+    public static final ResourceKey<JukeboxSong> LICH_THEME_01_KEY = createSong("incarnated_evil");
 
     private static ResourceKey<JukeboxSong> createSong(String name) {
         return ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, name));

@@ -6,6 +6,7 @@ import com.finallion.graveyard.item.DaggerItem;
 import com.finallion.graveyard.item.VialOfBlood;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
@@ -18,7 +19,7 @@ public class TGItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.createItems(TheGraveyard.MOD_ID);
 
     public static final Supplier<Item> OSSUARY = ITEMS.register("ossuary", () -> new BlockItem(TGBlocks.OSSUARY.get(), new Item.Properties()));
-    public static final Supplier<Item> INCARNATED_EVIL_MUSIC_DISC = ITEMS.register("incarnated_evil_music_disc", () -> new Item(new Item.Properties().jukeboxPlayable(TGSounds.LICH_THEME_01_KEY).stacksTo(1)));
+    public static final Supplier<Item> INCARNATED_EVIL_MUSIC_DISC = ITEMS.register("incarnated_evil_music_disc", () -> new Item(new Item.Properties().jukeboxPlayable(TGSounds.LICH_THEME_01_KEY).rarity(Rarity.RARE).stacksTo(1)));
 
     public static final Supplier<Item> SKELETON_CREEPER_SPAWN_EGG = ITEMS.register("skeleton_creeper_spawn_egg", () -> new DeferredSpawnEggItem(TGEntities.SKELETON_CREEPER, 7960171, 15263976, (new Item.Properties())));
     public static final Supplier<Item> ACOLYTE_SPAWN_EGG = ITEMS.register("acolyte_spawn_egg", () -> new DeferredSpawnEggItem(TGEntities.ACOLYTE, 2688830, 5898240, (new Item.Properties())));
