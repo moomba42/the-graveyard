@@ -37,7 +37,7 @@ public class GravestoneScreen extends AbstractSignEditScreen {
     protected void renderSignBackground(GuiGraphics guiGraphics, BlockState state) {
         guiGraphics.pose().translate(0.0F, -2.0F, 0.0F);
         guiGraphics.pose().scale(MAGIC_BACKGROUND_SCALE, MAGIC_BACKGROUND_SCALE, 1.0F);
-        guiGraphics.blit(this.texture, -12, -6, 1, 2, 24, 12, TEXTURE_WIDTH, TEXTURE_HEIGHT);
+        guiGraphics.blit(this.texture, -12, -6, 2, 2, 24, 12, TEXTURE_WIDTH, TEXTURE_HEIGHT);
     }
 
     @Override

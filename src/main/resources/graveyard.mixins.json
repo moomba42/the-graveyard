@@ -6,14 +6,12 @@
   "mixins": [
     "CreeperEntityMixin",
     "LakeFeatureMixin",
-    "ServerPlayNetworkHandlerMixin",
     "TreeFeatureMixin",
     "VillagerMixin",
     "WanderingTraderMixin",
     "WorldGenRegionAccessor"
   ],
   "client": [
-    "ClientPlayNetworkHandlerMixin",
     "LocalPlayerMixin"
   ],
   "injectors": {

@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -83,21 +84,19 @@ public class TGBlocks {
 
     public static final Supplier<VaseBlock> VASE_BLOCK = BLOCKS.register("vase_block", VaseBlock::new);
 
-    public static final Supplier<GravestoneBlockOld> GRAVESTONE = BLOCKS.register("gravestone", () -> new GravestoneBlockOld(POLISHED_BASALT_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> COBBLESTONE_GRAVESTONE = BLOCKS.register("cobblestone_gravestone", () -> new GravestoneBlockOld(COBBLESTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> MOSSY_COBBLESTONE_GRAVESTONE = BLOCKS.register("mossy_cobblestone_gravestone", () -> new GravestoneBlockOld(MOSSY_COBBLESTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> DEEPSLATE_GRAVESTONE = BLOCKS.register("deepslate_gravestone", () -> new GravestoneBlockOld(DEEPSLATE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> BLACKSTONE_GRAVESTONE = BLOCKS.register("blackstone_gravestone", () -> new GravestoneBlockOld(BLACKSTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> CRACKED_BLACKSTONE_GRAVESTONE = BLOCKS.register("cracked_blackstone_gravestone", () -> new GravestoneBlockOld(CRACKED_BLACKSTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> STONE_BRICKS_GRAVESTONE = BLOCKS.register("stone_bricks_gravestone", () -> new GravestoneBlockOld(STONE_BRICKS_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> MOSSY_STONE_BRICKS_GRAVESTONE = BLOCKS.register("mossy_stone_bricks_gravestone", () -> new GravestoneBlockOld(MOSSY_STONE_BRICKS_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> BRICKS_GRAVESTONE = BLOCKS.register("bricks_gravestone", () -> new GravestoneBlockOld(BRICKS_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> SANDSTONE_GRAVESTONE = BLOCKS.register("sandstone_gravestone", () -> new GravestoneBlockOld(SANDSTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> RED_SANDSTONE_GRAVESTONE = BLOCKS.register("red_sandstone_gravestone", () -> new GravestoneBlockOld(RED_SANDSTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> GILDED_BLACKSTONE_GRAVESTONE = BLOCKS.register("gilded_blackstone_gravestone", () -> new GravestoneBlockOld(GILDED_BLACKSTONE_GRAVESTONE_TEXTURE));
-    public static final Supplier<GravestoneBlockOld> QUARTZ_BRICKS_GRAVESTONE = BLOCKS.register("quartz_bricks_gravestone", () -> new GravestoneBlockOld(QUARTZ_BRICKS_GRAVESTONE_TEXTURE));
-
-    public static final Supplier<GravestoneBlock> GRAVESTONE2 = BLOCKS.register("gravestone2", () -> new GravestoneBlock(GravestoneType.MOSSY_COBBLESTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).forceSolidOn().sound(SoundType.BASALT).strength(1.5F)));
+    public static final Supplier<GravestoneBlock> GRAVESTONE = BLOCKS.register("gravestone", () -> new GravestoneBlock(GravestoneType.POLISHED_BASALT, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.BASALT).strength(1.25F, 4.2F)));
+    public static final Supplier<GravestoneBlock> COBBLESTONE_GRAVESTONE = BLOCKS.register("cobblestone_gravestone", () -> new GravestoneBlock(GravestoneType.COBBLESTONE, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Supplier<GravestoneBlock> MOSSY_COBBLESTONE_GRAVESTONE = BLOCKS.register("mossy_cobblestone_gravestone", () -> new GravestoneBlock(GravestoneType.MOSSY_COBBLESTONE, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.STONE).strength(2.0F, 6.0F)));
+    public static final Supplier<GravestoneBlock> DEEPSLATE_GRAVESTONE = BLOCKS.register("deepslate_gravestone", () -> new GravestoneBlock(GravestoneType.DEEPSLATE, BlockBehaviour.Properties.of().mapColor(MapColor.DEEPSLATE).forceSolidOn().sound(SoundType.DEEPSLATE).strength(3.0F, 6.0F)));
+    public static final Supplier<GravestoneBlock> BLACKSTONE_GRAVESTONE = BLOCKS.register("blackstone_gravestone", () -> new GravestoneBlock(GravestoneType.BLACKSTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Supplier<GravestoneBlock> CRACKED_BLACKSTONE_GRAVESTONE = BLOCKS.register("cracked_blackstone_gravestone", () -> new GravestoneBlock(GravestoneType.CRACKED_BLACKSTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Supplier<GravestoneBlock> STONE_BRICKS_GRAVESTONE = BLOCKS.register("stone_bricks_gravestone", () -> new GravestoneBlock(GravestoneType.STONE_BRICKS, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Supplier<GravestoneBlock> MOSSY_STONE_BRICKS_GRAVESTONE = BLOCKS.register("mossy_stone_bricks_gravestone", () -> new GravestoneBlock(GravestoneType.MOSSY_STONE_BRICKS, BlockBehaviour.Properties.of().mapColor(MapColor.STONE).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F)));
+    public static final Supplier<GravestoneBlock> BRICKS_GRAVESTONE = BLOCKS.register("bricks_gravestone", () -> new GravestoneBlock(GravestoneType.BRICKS, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_RED).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F)));
+    public static final Supplier<GravestoneBlock> SANDSTONE_GRAVESTONE = BLOCKS.register("sandstone_gravestone", () -> new GravestoneBlock(GravestoneType.SANDSTONE, BlockBehaviour.Properties.of().mapColor(MapColor.SAND).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(0.8F)));
+    public static final Supplier<GravestoneBlock> RED_SANDSTONE_GRAVESTONE = BLOCKS.register("red_sandstone_gravestone", () -> new GravestoneBlock(GravestoneType.RED_SANDSTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(0.8F)));
+    public static final Supplier<GravestoneBlock> GILDED_BLACKSTONE_GRAVESTONE = BLOCKS.register("gilded_blackstone_gravestone", () -> new GravestoneBlock(GravestoneType.GILDED_BLACKSTONE, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).sound(SoundType.GILDED_BLACKSTONE).strength(1.5F, 6.0F)));
+    public static final Supplier<GravestoneBlock> QUARTZ_BRICKS_GRAVESTONE = BLOCKS.register("quartz_bricks_gravestone", () -> new GravestoneBlock(GravestoneType.QUARTZ_BRICKS, BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).forceSolidOn().instrument(NoteBlockInstrument.BASEDRUM).strength(0.8F)));
 
     public static final Supplier<UrnBlock> BLACK_URN = BLOCKS.register("black_urn", () -> new UrnBlock());
     public static final Supplier<UrnBlock> BROWN_URN = BLOCKS.register("brown_urn", () -> new UrnBlock());

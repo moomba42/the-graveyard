@@ -8,11 +8,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GravestoneBlockEntity extends SignBlockEntity {
     public GravestoneBlockEntity(BlockPos pos, BlockState blockState) {
-        super(TGBlockEntities.GRAVESTONE_BLOCK_ENTITY_2.get(), pos, blockState);
+        super(TGBlockEntities.GRAVESTONE_BLOCK_ENTITY.get(), pos, blockState);
     }
 
     @Override
     public BlockEntityType<?> getType() {
-        return TGBlockEntities.GRAVESTONE_BLOCK_ENTITY_2.get();
+        return TGBlockEntities.GRAVESTONE_BLOCK_ENTITY.get();
     }
 }
