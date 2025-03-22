@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_bottom_top",
-  "render_type": "cutout",
+  "render_type": "minecraft:cutout",
   "textures": {
     "bottom": "minecraft:block/dirt",
     "particle": "minecraft:block/dirt",

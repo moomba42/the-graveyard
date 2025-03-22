@@ -7,7 +7,6 @@ import com.finallion.graveyard.item.VialOfBlood;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tiers;
 import net.neoforged.neoforge.common.DeferredSpawnEggItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -79,7 +78,7 @@ public class TGItems {
     public static final Supplier<Item> VASE_BLOCK = ITEMS.register("vase_block", () -> new BlockItem(TGBlocks.VASE_BLOCK.get(), new Item.Properties()));
 
     public static final Supplier<Item> GRAVESTONE = ITEMS.register("gravestone", () -> new BlockItem(TGBlocks.GRAVESTONE.get(), new Item.Properties()));
-    public static final Supplier<Item> COBBLESTONE_GRAVESTONE = ITEMS.register( "cobblestone_gravestone", () -> new BlockItem(TGBlocks.COBBLESTONE_GRAVESTONE.get(), new Item.Properties()));
+    public static final Supplier<Item> COBBLESTONE_GRAVESTONE = ITEMS.register("cobblestone_gravestone", () -> new BlockItem(TGBlocks.COBBLESTONE_GRAVESTONE.get(), new Item.Properties()));
     public static final Supplier<Item> MOSSY_COBBLESTONE_GRAVESTONE = ITEMS.register("mossy_cobblestone_gravestone", () -> new BlockItem(TGBlocks.MOSSY_COBBLESTONE_GRAVESTONE.get(), new Item.Properties()));
     public static final Supplier<Item> DEEPSLATE_GRAVESTONE = ITEMS.register("deepslate_gravestone", () -> new BlockItem(TGBlocks.DEEPSLATE_GRAVESTONE.get(), new Item.Properties()));
     public static final Supplier<Item> BLACKSTONE_GRAVESTONE = ITEMS.register("blackstone_gravestone", () -> new BlockItem(TGBlocks.BLACKSTONE_GRAVESTONE.get(), new Item.Properties()));
