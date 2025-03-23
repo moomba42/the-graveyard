@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "com.finallion.graveyard.mixin",
+  "package": "com.moomba.graveyard.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "graveyard.refmap.json",
   "mixins": [

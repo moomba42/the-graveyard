@@ -1,0 +1,26 @@
+package com.moomba.graveyard.entities.models;
+
+import com.moomba.graveyard.TheGraveyard;
+import com.moomba.graveyard.entities.ReaperEntity;
+import net.minecraft.resources.ResourceLocation;
+import software.bernie.geckolib.model.GeoModel;
+
+public class ReaperModel extends GeoModel<ReaperEntity> {
+
+    @Override
+    public ResourceLocation getModelResource(ReaperEntity object) {
+        return ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "geo/reaper.geo.json");
+    }
+
+    @Override
+    public ResourceLocation getTextureResource(ReaperEntity object) {
+        return ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "textures/entity/reaper.png");
+    }
+
+    @Override
+    public ResourceLocation getAnimationResource(ReaperEntity animatable) {
+        return ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, "animations/reaper/reaper.animation.json");
+    }
+
+
+}

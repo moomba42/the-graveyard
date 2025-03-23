@@ -1,0 +1,21 @@
+package com.moomba.graveyard.entities.renders;
+
+import com.moomba.graveyard.entities.CorruptedIllager;
+import com.moomba.graveyard.entities.models.CorruptedIllagerModel;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.MobRenderer;
+import net.minecraft.client.renderer.entity.layers.CustomHeadLayer;
+
+public abstract class CorruptedIllagerRenderer<T extends CorruptedIllager> extends MobRenderer<T, CorruptedIllagerModel<T>> {
+    protected CorruptedIllagerRenderer(EntityRendererProvider.Context ctx, CorruptedIllagerModel<T> model, float shadowRadius) {
+        super(ctx, model, shadowRadius);
+        this.addLayer(new CustomHeadLayer(this, ctx.getModelSet(), ctx.getItemInHandRenderer()));
+    }
+
+    protected void scale(T illagerEntity, PoseStack matrixStack, float f) {
+        float g = 0.9375F;
+        matrixStack.scale(0.9375F, 0.9375F, 0.9375F);
+    }
+}
+
