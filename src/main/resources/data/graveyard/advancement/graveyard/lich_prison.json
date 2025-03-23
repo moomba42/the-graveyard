@@ -24,7 +24,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "graveyard:lich_prison"
+                "structures": ["graveyard:lich_prison"]
               }
             }
           }

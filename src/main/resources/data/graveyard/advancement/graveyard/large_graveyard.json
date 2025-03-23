@@ -24,7 +24,7 @@
             "entity": "this",
             "predicate": {
               "location": {
-                "structure": "graveyard:large_graveyard"
+                "structures": ["graveyard:large_graveyard"]
               }
             }
           }
