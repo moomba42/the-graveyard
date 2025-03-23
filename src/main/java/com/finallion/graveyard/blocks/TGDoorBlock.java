@@ -7,6 +7,6 @@ public class TGDoorBlock extends DoorBlock {
 
     // access to private door constructor
     public TGDoorBlock(Properties settings) {
-        super(settings, BlockSetType.IRON);
+        super(BlockSetType.IRON, settings);
     }
 }

@@ -31,8 +31,7 @@ public class LakeFeatureMixin {
             SectionPos sectionPos = SectionPos.of(context.origin());
             ChunkAccess chunkAccess = context.level().getChunk(context.origin());
 
-
-            StructureManager structureFeatureManager = ((WorldGenRegionAccessor) context.level()).getStructureFeatureManager();
+            StructureManager structureFeatureManager = ((WorldGenRegionAccessor) context.level()).getLevel().structureManager();
 
             for (Structure structure : TGConfiguredStructureFeatures.structures) {
                 StructureStart structureStart = structureFeatureManager.getStartForStructure(sectionPos, structure, chunkAccess);

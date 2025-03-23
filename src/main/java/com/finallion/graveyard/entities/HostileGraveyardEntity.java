@@ -12,6 +12,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class HostileGraveyardEntity extends Monster {
     private String name;
@@ -23,9 +24,9 @@ public abstract class HostileGraveyardEntity extends Monster {
     }
 
     @Override
-    protected void defineSynchedData() {
-        this.entityData.define(CAN_BURN_IN_SUNLIGHT, true);
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CAN_BURN_IN_SUNLIGHT, true);
     }
 
     @Override
@@ -117,7 +118,7 @@ public abstract class HostileGraveyardEntity extends Monster {
                     if (itemstack.isDamageableItem()) {
                         itemstack.setDamageValue(itemstack.getDamageValue() + this.random.nextInt(2));
                         if (itemstack.getDamageValue() >= itemstack.getMaxDamage()) {
-                            this.broadcastBreakEvent(EquipmentSlot.HEAD);
+                            this.onEquippedItemBroken(this.getItemBySlot(EquipmentSlot.HEAD).getItem(), EquipmentSlot.HEAD);
                             this.setItemSlot(EquipmentSlot.HEAD, ItemStack.EMPTY);
                         }
                     }
@@ -126,7 +127,7 @@ public abstract class HostileGraveyardEntity extends Monster {
                 }
 
                 if (flag) {
-                    this.setSecondsOnFire(8);
+                    this.igniteForSeconds(8);
                 }
             }
         }

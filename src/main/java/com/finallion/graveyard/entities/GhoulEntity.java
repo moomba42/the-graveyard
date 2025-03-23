@@ -9,12 +9,12 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobType;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -33,22 +33,24 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.NotNull;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
-import java.util.UUID;
 
 public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-    private static final UUID SLOWNESS_ID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A1");
-    private static final AttributeModifier SLOWNESS_EFFECT;
+    private static final ResourceLocation SLOWNESS_EFFECT_ID = ResourceLocation.withDefaultNamespace("effect.slowness");
+    private static final AttributeModifier SLOWNESS_EFFECT = new AttributeModifier(
+            SLOWNESS_EFFECT_ID, -0.3F, AttributeModifier.Operation.ADD_VALUE
+    );
 
     private static final EntityDataAccessor<Byte> VARIANT;
     private static final EntityDataAccessor<Integer> ATTACK_ANIM_TIMER;
@@ -81,18 +83,18 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
 
         // selects one of eight skins for the ghoul (in BaseGhoulModel)
         byte variant = (byte) ((byte) random.nextInt(8) + (byte)1);
 
-        this.entityData.define(VARIANT, variant);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(RAGE_ANIM_TIMER, 0);
-        this.entityData.define(SPAWN_TIMER, 32);
-        this.entityData.define(IS_RAGING, false);
+        builder.define(VARIANT, variant);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(RAGE_ANIM_TIMER, 0);
+        builder.define(SPAWN_TIMER, 32);
+        builder.define(IS_RAGING, false);
     }
 
     protected void registerGoals() {
@@ -118,10 +120,11 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
                 .add(Attributes.KNOCKBACK_RESISTANCE, 0.5D);
     }
 
-
-    public MobType getMobType() {
-        return MobType.UNDEAD;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public MobType getMobType() {
+//        return MobType.UNDEAD;
+//    }
 
     public int getAnimationState() {
         return this.entityData.get(ANIMATION);
@@ -286,12 +289,12 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
     public void aiStep() {
         AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
         if (isRaging()) {
-            if (!entityAttributeInstance.hasModifier(SLOWNESS_EFFECT)) {
+            if (!entityAttributeInstance.hasModifier(SLOWNESS_EFFECT_ID)) {
                 entityAttributeInstance.addTransientModifier(SLOWNESS_EFFECT);
             }
         } else {
-            if (entityAttributeInstance.hasModifier(SLOWNESS_EFFECT)) {
-                entityAttributeInstance.removeModifier(SLOWNESS_EFFECT);
+            if (entityAttributeInstance.hasModifier(SLOWNESS_EFFECT_ID)) {
+                entityAttributeInstance.removeModifier(SLOWNESS_EFFECT_ID);
             }
         }
 
@@ -369,7 +372,6 @@ public class GhoulEntity extends AngerableGraveyardEntity implements GeoEntity {
         ANIMATION = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.INT);
         SPAWN_TIMER = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.INT);
         IS_RAGING = SynchedEntityData.defineId(GhoulEntity.class, EntityDataSerializers.BOOLEAN);
-        SLOWNESS_EFFECT = new AttributeModifier(SLOWNESS_ID, "Slowness effect", -0.3D, AttributeModifier.Operation.ADDITION);
     }
 
 }

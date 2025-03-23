@@ -17,6 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerBossEvent;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,19 +44,21 @@ import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.EvokerFangs;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -69,12 +72,12 @@ public class LichEntity extends Monster implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
     protected static final TargetingConditions HEAD_TARGET_PREDICATE;
     private static final Predicate<LivingEntity> CAN_ATTACK_PREDICATE;
-    private static final UUID ATTACKING_SPEED_BOOST_ID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-    private static final UUID ATTACKING_DMG_BOOST_ID = UUID.fromString("120E0DFB-87AE-4653-9776-831010E291A1");
-    private static final UUID CRAWL_SPEED_BOOST_ID = UUID.fromString("120E0DFB-87AE-1978-9776-831010E291A2");
-    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, "Crawl speed boost", 0.18D, AttributeModifier.Operation.ADDITION);;
-    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(ATTACKING_SPEED_BOOST_ID, "Attacking speed boost", GraveyardConfig.COMMON.speedInHuntPhase.get(), AttributeModifier.Operation.ADDITION);
-    private static final AttributeModifier DMG_BOOST = new AttributeModifier(ATTACKING_DMG_BOOST_ID, "Damage speed boost", GraveyardConfig.COMMON.damageHuntingPhaseAddition.get(), AttributeModifier.Operation.ADDITION);
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = ResourceLocation.withDefaultNamespace("attacking");
+    private static final ResourceLocation DAMAGE_BOOST_ID = ResourceLocation.withDefaultNamespace("effect.strength");
+    private static final ResourceLocation CRAWL_SPEED_BOOST_ID = ResourceLocation.withDefaultNamespace("enchantment.swift_sneak");
+    private static final AttributeModifier CRAWL_SPEED_BOOST = new AttributeModifier(CRAWL_SPEED_BOOST_ID, 0.18D, AttributeModifier.Operation.ADD_VALUE);
+    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(SPEED_MODIFIER_ATTACKING_ID, 0.15D, AttributeModifier.Operation.ADD_VALUE); // TODO: Value was loaded from GraveyardConfig.COMMON.speedInHuntPhase
+    private static final AttributeModifier DMG_BOOST = new AttributeModifier(DAMAGE_BOOST_ID, 40.0D, AttributeModifier.Operation.ADD_VALUE); // TODO: Value was loaded from GraveyardConfig.COMMON.damageHuntingPhaseAddition
     // animation
     private final RawAnimation SPAWN_ANIMATION = RawAnimation.begin().then("spawn", Animation.LoopType.PLAY_ONCE);
     private final RawAnimation IDLE_ANIMATION = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
@@ -294,12 +297,12 @@ public class LichEntity extends Monster implements GeoEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return Monster.createMonsterAttributes()
-                .add(Attributes.MAX_HEALTH, GraveyardConfig.COMMON.healthInCastingPhase.get())
+                .add(Attributes.MAX_HEALTH, 400.0D) // TODO: This used to be loaded from GraveyardConfig.COMMON.healthInCastingPhase
                 .add(Attributes.MOVEMENT_SPEED, 0.0D)
-                .add(Attributes.ATTACK_DAMAGE, GraveyardConfig.COMMON.damageCastingPhase.get())
+                .add(Attributes.ATTACK_DAMAGE, 30.0D) // TODO: This used to be loaded from GraveyardConfig.COMMON.damageCastingPhase
                 .add(Attributes.FOLLOW_RANGE, 25.0D)
-                .add(Attributes.ARMOR, GraveyardConfig.COMMON.armor.get())
-                .add(Attributes.ARMOR_TOUGHNESS, GraveyardConfig.COMMON.armorToughness.get())
+                .add(Attributes.ARMOR, 18.0D) // TODO: This used to be loaded from GraveyardConfig.COMMON.armor
+                .add(Attributes.ARMOR_TOUGHNESS, 14.0D) // TODO: This used to be loaded from GraveyardConfig.COMMON.armorToughness
                 .add(Attributes.KNOCKBACK_RESISTANCE, 1.0D);
     }
 
@@ -395,7 +398,7 @@ public class LichEntity extends Monster implements GeoEntity {
         }
 
         if (!canHuntStart() && random.nextInt(5) == 0) {
-            level().playSound(null, this.blockPosition(), SoundEvents.SOUL_ESCAPE, SoundSource.HOSTILE, 4.0F, -10.0F);
+            level().playSound(null, this.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.HOSTILE, 4.0F, -10.0F);
         }
 
         if (getMusicDelay() < 85) {
@@ -442,7 +445,7 @@ public class LichEntity extends Monster implements GeoEntity {
             AttributeInstance entityAttributeInstance = this.getAttribute(Attributes.MOVEMENT_SPEED);
             setCanMove(true);
             setAnimationState(ANIMATION_PHASE_3_ATTACK);
-            if (!entityAttributeInstance.hasModifier(CRAWL_SPEED_BOOST)) {
+            if (!entityAttributeInstance.hasModifier(CRAWL_SPEED_BOOST_ID)) {
                 entityAttributeInstance.addTransientModifier(CRAWL_SPEED_BOOST);
             }
         }
@@ -493,11 +496,11 @@ public class LichEntity extends Monster implements GeoEntity {
                 }
                 setAnimationState(ANIMATION_PHASE_2_ATTACK);
 
-                if (!entityAttributeInstance.hasModifier(ATTACKING_SPEED_BOOST)) {
+                if (!entityAttributeInstance.hasModifier(SPEED_MODIFIER_ATTACKING_ID)) {
                     entityAttributeInstance.addTransientModifier(ATTACKING_SPEED_BOOST);
                 }
 
-                if (!entityAttributeDmgInstance.hasModifier(DMG_BOOST)) {
+                if (!entityAttributeDmgInstance.hasModifier(DAMAGE_BOOST_ID)) {
                     entityAttributeDmgInstance.addTransientModifier(DMG_BOOST);
                 }
             }
@@ -683,23 +686,13 @@ public class LichEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(Pose pose, EntityDimensions dimensions) {
+    public EntityDimensions getDefaultDimensions(Pose pose) {
         if (pose == Pose.CROUCHING) {
-            return 2.0F;
+            return CRAWL_DIMENSIONS.scale(this.getAgeScale());
         } else {
-            return 4.0F;
+            return super.getDefaultDimensions(pose);
         }
     }
-
-    @Override
-    public EntityDimensions getDimensions(Pose pose) {
-        if (pose == Pose.CROUCHING) {
-            setPose(Pose.CROUCHING);
-            return CRAWL_DIMENSIONS;
-        }
-        return super.getDimensions(pose);
-    }
-
 
     @Override
     public boolean causeFallDamage(float p_147187_, float p_147188_, DamageSource p_147189_) {
@@ -711,10 +704,11 @@ public class LichEntity extends Monster implements GeoEntity {
         return false;
     }
 
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public MobType getMobType() {
+//        return MobType.UNDEAD;
+//    }
 
     @Override
     protected boolean canRide(Entity p_20339_) {
@@ -770,7 +764,7 @@ public class LichEntity extends Monster implements GeoEntity {
         setHealth(HEALTH_PHASE_02);
         setAttackAnimTimer(0);
         if (getPhase() == 4 || getPhase() == 5) {
-            getDimensions(Pose.CROUCHING);
+            setPose(Pose.CROUCHING);
         }
     }
 
@@ -820,10 +814,9 @@ public class LichEntity extends Monster implements GeoEntity {
     }
 
     @Override
-    public boolean ignoreExplosion() {
+    public boolean ignoreExplosion(Explosion explosion) {
         return true;
     }
-
 
     private boolean summonMob(boolean hard) {
         if (this.getHuntTimer() <= 1) { // do not summon mobs when lich is hunting
@@ -1085,24 +1078,25 @@ public class LichEntity extends Monster implements GeoEntity {
 
     /* SOUNDS END */
 
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(CAN_MOVE, false);
-        this.entityData.define(INVUL_TIMER, 0);
-        this.entityData.define(MUSIC_DELAY, 0);
-        this.entityData.define(HUNT_TIMER, 0);
-        this.entityData.define(FIGHT_DURATION_TIMER, 0);
-        this.entityData.define(HEAL_DURATION_TIMER, 0);
-        this.entityData.define(LEVITATION_DURATION_TIMER, 0);
-        this.entityData.define(CORPSE_SPELL_DURATION_TIMER, 0);
-        this.entityData.define(PHASE_INVUL_TIMER, 0);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(CONJURE_FANG_TIMER, 0);
-        this.entityData.define(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
-        this.entityData.define(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
-        this.entityData.define(PHASE, 1);
-        this.entityData.define(CAN_HUNT_START, false);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(CAN_MOVE, false);
+        builder.define(INVUL_TIMER, 0);
+        builder.define(MUSIC_DELAY, 0);
+        builder.define(HUNT_TIMER, 0);
+        builder.define(FIGHT_DURATION_TIMER, 0);
+        builder.define(HEAL_DURATION_TIMER, 0);
+        builder.define(LEVITATION_DURATION_TIMER, 0);
+        builder.define(CORPSE_SPELL_DURATION_TIMER, 0);
+        builder.define(PHASE_INVUL_TIMER, 0);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(CONJURE_FANG_TIMER, 0);
+        builder.define(PHASE_TWO_START_ANIM_TIMER, START_PHASE_TWO_ANIMATION_DURATION);
+        builder.define(PHASE_THREE_START_ANIM_TIMER, START_PHASE_THREE_ANIMATION_DURATION);
+        builder.define(PHASE, 1);
+        builder.define(CAN_HUNT_START, false);
     }
 
     // on game stop

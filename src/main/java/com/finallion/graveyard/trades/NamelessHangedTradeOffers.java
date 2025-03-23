@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
@@ -16,12 +17,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MapItem;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.trading.ItemCost;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.saveddata.maps.MapDecoration;
+import net.minecraft.world.level.saveddata.maps.MapDecorationType;
 import net.minecraft.world.level.saveddata.maps.MapItemSavedData;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.stream.Stream;
 
 
 //@Mod.EventBusSubscriber(modid = TheGraveyard.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -135,7 +140,7 @@ public class NamelessHangedTradeOffers {
         }
 
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
-            return new MerchantOffer(new ItemStack(TGItems.CORRUPTION.get(), this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
+            return new MerchantOffer(new ItemCost(TGItems.CORRUPTION.get(), this.price), new ItemStack(this.sell.getItem(), this.count), this.maxUses, this.experience, this.multiplier);
         }
     }
 
@@ -143,11 +148,11 @@ public class NamelessHangedTradeOffers {
         private final int price;
         private final TagKey<Structure> structure;
         private final String nameKey;
-        private final MapDecoration.Type iconType;
+        private final Holder<MapDecorationType> iconType;
         private final int maxUses;
         private final int experience;
 
-        public SellMapFactory(int price, TagKey<Structure> structure, String nameKey, MapDecoration.Type iconType, int maxUses, int experience) {
+        public SellMapFactory(int price, TagKey<Structure> structure, String nameKey, Holder<MapDecorationType> iconType, int maxUses, int experience) {
             this.price = price;
             this.structure = structure;
             this.nameKey = nameKey;
@@ -167,8 +172,9 @@ public class NamelessHangedTradeOffers {
                     ItemStack itemStack = MapItem.create(serverWorld, blockPos.getX(), blockPos.getZ(), (byte)2, true, true);
                     MapItem.renderBiomePreviewMap(serverWorld, itemStack);
                     MapItemSavedData.addTargetDecoration(itemStack, blockPos, "+", this.iconType);
-                    itemStack.setHoverName(Component.translatable(this.nameKey));
-                    return new MerchantOffer(new ItemStack(TGItems.CORRUPTION.get(), this.price), new ItemStack(Items.COMPASS), itemStack, this.maxUses, this.experience, 0.2F);
+                    // TODO: Reintroduce this
+//                    itemStack.setHoverName(Component.translatable(this.nameKey));
+                    return new MerchantOffer(new ItemCost(TGItems.CORRUPTION.get(), this.price), Optional.of(new ItemCost(Items.COMPASS)), itemStack, this.maxUses, this.experience, 0.2F);
                 } else {
                     return null;
                 }
@@ -197,10 +203,9 @@ public class NamelessHangedTradeOffers {
 
         public MerchantOffer getOffer(Entity entity, RandomSource random) {
             int i = 5 + random.nextInt(15);
-            ItemStack itemStack = EnchantmentHelper.enchantItem(random, new ItemStack(this.tool.getItem()), i, false);
+            ItemStack itemStack = EnchantmentHelper.enchantItem(random, new ItemStack(this.tool.getItem()), i, Stream.of());
             int j = Math.min(this.basePrice, 64);
-            ItemStack itemStack2 = new ItemStack(TGItems.CORRUPTION.get(), j);
-            return new MerchantOffer(itemStack2, itemStack, this.maxUses, this.experience, this.multiplier);
+            return new MerchantOffer(new ItemCost(TGItems.CORRUPTION.get(), j), itemStack, this.maxUses, this.experience, this.multiplier);
         }
     }
 

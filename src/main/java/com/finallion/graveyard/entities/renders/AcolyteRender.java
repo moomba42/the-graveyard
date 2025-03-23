@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class AcolyteRender extends CorruptedIllagerRenderer<AcolyteEntity> {
-    private static final ResourceLocation TEXTURE = new ResourceLocation(TheGraveyard.MOD_ID,"textures/entity/acolyte.png");
+    private static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID,"textures/entity/acolyte.png");
 
     public AcolyteRender(EntityRendererProvider.Context context) {
         super(context, new CorruptedIllagerModel<>(context.bakeLayer(TheGraveyardClient.CORRUPTED_ILLAGER_MODEL_LAYER)), 0.5F);

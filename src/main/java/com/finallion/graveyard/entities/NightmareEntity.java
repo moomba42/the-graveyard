@@ -35,19 +35,23 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.event.entity.EntityTeleportEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.RawAnimation;
+import software.bernie.geckolib.animation.PlayState;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.EnumSet;
 import java.util.UUID;
 import java.util.function.Predicate;
+
+import static net.neoforged.neoforge.event.EventHooks.onEnderTeleport;
 
 public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity, NeutralMob {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -76,18 +80,19 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
         //this.maxUpStep = 1.0F;
     }
 
-    @Override
-    public float getStepHeight() {
-        return 1.0F;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public float getStepHeight() {
+//        return 1.0F;
+//    }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(DATA_CREEPY, false);
-        this.entityData.define(DATA_STARED_AT, false);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_CREEPY, false);
+        builder.define(DATA_STARED_AT, false);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(ANIMATION, ANIMATION_IDLE);
     }
 
     public int getAnimationState() {
@@ -291,8 +296,10 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
 
         }
     }
-    protected float getStandingEyeHeight(Pose p_32517_, EntityDimensions p_32518_) {
-        return 2.55F;
+
+    @Override
+    public EntityDimensions getDefaultDimensions(Pose pose) {
+        return super.getDefaultDimensions(pose).withEyeHeight(2.55f);
     }
 
     boolean teleportTowards(Entity entity) {
@@ -316,7 +323,7 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
         boolean flag = blockstate.blocksMotion();
         boolean flag1 = blockstate.getFluidState().is(Fluids.WATER);
         if (flag && !flag1) {
-            net.minecraftforge.event.entity.EntityTeleportEvent.EnderEntity event = net.minecraftforge.event.ForgeEventFactory.onEnderTeleport(this, p_32544_, p_32545_, p_32546_);
+            EntityTeleportEvent.EnderEntity event = onEnderTeleport(this, p_32544_, p_32545_, p_32546_);
             if (event.isCanceled()) return false;
             boolean flag2 = this.randomTeleport(event.getTargetX(), event.getTargetY(), event.getTargetZ(), false);
             if (flag2 && !this.isSilent()) {
@@ -393,7 +400,7 @@ public class NightmareEntity extends HostileGraveyardEntity implements GeoEntity
     public void createWitherRose(@Nullable LivingEntity adversary) {
         if (adversary instanceof ServerPlayer player) {
             if (player.hasEffect(MobEffects.BLINDNESS)) {
-                TGAdvancements.KILL_WHILE_BLINDED.trigger(player);
+                TGAdvancements.KILL_WHILE_BLINDED.get().trigger(player);
             }
         }
         super.setLastHurtByMob(adversary);

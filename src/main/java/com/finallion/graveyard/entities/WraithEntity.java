@@ -9,19 +9,28 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.FlyingMoveControl;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.Goal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomFlyingGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
@@ -36,24 +45,26 @@ import net.minecraft.world.level.block.CandleBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.pathfinder.BlockPathTypes;
+import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
-import java.util.UUID;
 
 public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     private AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
-    private static final UUID SPEED_MODIFIER_ATTACKING_UUID = UUID.fromString("020E0DFB-87AE-4653-9556-831010E291A0");
-    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(SPEED_MODIFIER_ATTACKING_UUID, "Attacking speed boost", (double)0.2F, AttributeModifier.Operation.ADDITION);
+
+    private static final ResourceLocation SPEED_MODIFIER_ATTACKING_ID = ResourceLocation.withDefaultNamespace("attacking");
+    private static final AttributeModifier ATTACKING_SPEED_BOOST = new AttributeModifier(
+            SPEED_MODIFIER_ATTACKING_ID, 0.2F, AttributeModifier.Operation.ADD_VALUE
+    );
     private final RawAnimation DEATH_ANIMATION = RawAnimation.begin().then("death", Animation.LoopType.PLAY_ONCE);
     private final RawAnimation IDLE_ANIMATION = RawAnimation.begin().then("idle", Animation.LoopType.LOOP);
     private final RawAnimation SPAWN_ANIMATION = RawAnimation.begin().then("spawn", Animation.LoopType.PLAY_ONCE);
@@ -75,11 +86,11 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     public WraithEntity(EntityType<? extends Monster> entityType, Level world) {
         super(entityType, world, "wraith");
         this.moveControl = new FlyingMoveControl(this, 0, true);
-        this.setPathfindingMalus(BlockPathTypes.DANGER_FIRE, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.WATER_BORDER, 16.0F);
-        this.setPathfindingMalus(BlockPathTypes.COCOA, -1.0F);
-        this.setPathfindingMalus(BlockPathTypes.FENCE, -1.0F);
+        this.setPathfindingMalus(PathType.DANGER_FIRE, -1.0F);
+        this.setPathfindingMalus(PathType.WATER, -1.0F);
+        this.setPathfindingMalus(PathType.WATER_BORDER, 16.0F);
+        this.setPathfindingMalus(PathType.COCOA, -1.0F);
+        this.setPathfindingMalus(PathType.FENCE, -1.0F);
     }
 
 
@@ -141,11 +152,10 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
 
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
         spawnTimer = 20;
-        setAnimation(ANIMATION_SPAWN);
+        builder.define(ANIMATION, ANIMATION_SPAWN);
     }
 
     public void tick() {
@@ -205,7 +215,7 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
         if (!isAggressive()) {
             attributeinstance.removeModifier(ATTACKING_SPEED_BOOST);
         } else {
-            if (!attributeinstance.hasModifier(ATTACKING_SPEED_BOOST)) {
+            if (!attributeinstance.hasModifier(ATTACKING_SPEED_BOOST.id())) {
                 attributeinstance.addTransientModifier(ATTACKING_SPEED_BOOST);
             }
         }
@@ -216,11 +226,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
             addDeathParticles();
         }
         super.aiStep();
-    }
-
-    @Override
-    public MobType getMobType() {
-        return MobType.UNDEAD;
     }
 
     @Override
@@ -255,10 +260,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
         ++this.timeSinceExtinguish;
     }
 
-    public boolean hasHomePosition() {
-        return this.homePosition != null;
-    }
-
 
     @Override
     public boolean isInvulnerableTo(DamageSource damageSource) {
@@ -277,16 +278,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, 0.2D)
                 .add(Attributes.FLYING_SPEED, 0.35);
     }
-
-
-    public byte getAnimation() {
-        return entityData.get(ANIMATION);
-    }
-
-    public void setAnimation(byte animation) {
-        entityData.set(ANIMATION, animation);
-    }
-
 
     public void registerControllers(AnimatableManager.ControllerRegistrar data) {
         data.add(new AnimationController(this, "controller", 2, event -> {
@@ -313,7 +304,7 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
             return PlayState.CONTINUE;
         }));
         data.add(new AnimationController(this, "controller2", 0, event -> {
-            if (getAnimation() == 0) {
+            if (this.entityData.get(ANIMATION) == 0) {
                 event.getController().setAnimation(SPAWN_ANIMATION);
                 spawned = true;
 
@@ -327,14 +318,6 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return factory;
-    }
-
-
-    boolean closerThan(BlockPos pos, int distance) {
-        if (pos == null) {
-            return false;
-        }
-        return pos.closerThan(this.getOnPos(), (double) distance);
     }
 
     @Override
@@ -468,7 +451,7 @@ public class WraithEntity extends HostileGraveyardEntity implements GeoEntity {
         if (bool) {
             Player player = wraith.level().getNearestPlayer(wraith, 10.0D);
             if (player instanceof ServerPlayer) {
-                TGAdvancements.DIM_LIGHT.trigger((ServerPlayer) player);
+                TGAdvancements.DIM_LIGHT.get().trigger((ServerPlayer) player);
             }
         }
     }

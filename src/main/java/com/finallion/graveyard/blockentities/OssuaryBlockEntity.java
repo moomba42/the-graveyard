@@ -1,9 +1,8 @@
 package com.finallion.graveyard.blockentities;
 
-
 import com.finallion.graveyard.blocks.OssuaryBlock;
+import com.finallion.graveyard.init.TGBlockEntities;
 import com.finallion.graveyard.init.TGSounds;
-import com.finallion.graveyard.init.TGTileEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -12,14 +11,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
-
 
 public class OssuaryBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache factory = GeckoLibUtil.createInstanceCache(this);
@@ -29,7 +27,7 @@ public class OssuaryBlockEntity extends BlockEntity implements GeoBlockEntity {
     private boolean playedSound = false;
 
     public OssuaryBlockEntity(BlockPos pos, BlockState state) {
-        super(TGTileEntities.OSSUARY_BLOCK_ENTITY.get(), pos, state);
+        super(TGBlockEntities.OSSUARY_BLOCK_ENTITY.get(), pos, state);
     }
 
     @Override
@@ -37,9 +35,9 @@ public class OssuaryBlockEntity extends BlockEntity implements GeoBlockEntity {
         data.add(new AnimationController<>(this, "controller", 0, event -> {
             AnimationController.State state = event.getController().getAnimationState();
             if (this.getBlockState().getValue(OssuaryBlock.OPEN)) {
-                if (state == AnimationController.State.STOPPED || state == AnimationController.State.PAUSED)  {
+                if (state == AnimationController.State.STOPPED || state == AnimationController.State.PAUSED) {
                     if (level != null && !playedSound) {
-                        Player playerEntity = level.getNearestPlayer((double)worldPosition.getX() + 0.5D, (double)worldPosition.getY() + 0.5D, (double)worldPosition.getZ() + 0.5D, 4.0D, false);
+                        Player playerEntity = level.getNearestPlayer((double) worldPosition.getX() + 0.5D, (double) worldPosition.getY() + 0.5D, (double) worldPosition.getZ() + 0.5D, 4.0D, false);
                         if (playerEntity != null) {
                             playerEntity.playNotifySound(TGSounds.OSSUARY_OPEN.get(), SoundSource.BLOCKS, 1.0F, -2.0F);
                             playedSound = true;
@@ -66,10 +64,10 @@ public class OssuaryBlockEntity extends BlockEntity implements GeoBlockEntity {
 
     public static void tick(Level world, BlockPos pos, BlockState state, OssuaryBlockEntity blockEntity) {
         if (world.random.nextInt(100) == 0) {
-            world.playSound(null, pos, SoundEvents.SOUL_ESCAPE, SoundSource.BLOCKS, 4.0F, -3.0F);
+            world.playSound(null, pos, SoundEvents.SOUL_ESCAPE.value(), SoundSource.BLOCKS, 4.0F, -3.0F);
         }
 
-        Player playerEntity = world.getNearestPlayer((double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, 4.0D, false);
+        Player playerEntity = world.getNearestPlayer((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, 4.0D, false);
         if (playerEntity != null && !state.getValue(OssuaryBlock.OPEN)) {
             world.setBlock(pos, state.setValue(OssuaryBlock.OPEN, true), 3);
         } else if (playerEntity == null && state.getValue(OssuaryBlock.OPEN)) {

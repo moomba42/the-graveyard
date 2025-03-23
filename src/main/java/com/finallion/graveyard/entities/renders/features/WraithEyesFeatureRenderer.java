@@ -13,7 +13,7 @@ import software.bernie.geckolib.renderer.GeoRenderer;
 import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 public class WraithEyesFeatureRenderer extends GeoRenderLayer<WraithEntity> {
-    private final RenderType TEXTURE = RenderType.eyes(new ResourceLocation("graveyard:textures/entity/wraith_eyes.png"));
+    private final RenderType TEXTURE = RenderType.eyes(ResourceLocation.parse("graveyard:textures/entity/wraith_eyes.png"));
     private final GeoRenderer<WraithEntity> renderer;
 
     public WraithEyesFeatureRenderer(GeoRenderer<WraithEntity> entityRendererIn) {
@@ -35,7 +35,7 @@ public class WraithEyesFeatureRenderer extends GeoRenderLayer<WraithEntity> {
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF
         );
     }
 

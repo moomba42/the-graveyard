@@ -14,7 +14,7 @@ import software.bernie.geckolib.renderer.layer.GeoRenderLayer;
 
 
 public class ReaperEyesFeatureRenderer extends GeoRenderLayer<ReaperEntity> {
-    private final RenderType TEXTURE = RenderType.eyes(new ResourceLocation("graveyard:textures/entity/reaper_eyes.png"));
+    private final RenderType TEXTURE = RenderType.eyes(ResourceLocation.parse("graveyard:textures/entity/reaper_eyes.png"));
     private final GeoRenderer<ReaperEntity> renderer;
 
     public ReaperEyesFeatureRenderer(GeoRenderer<ReaperEntity> entityRendererIn) {
@@ -36,7 +36,7 @@ public class ReaperEyesFeatureRenderer extends GeoRenderLayer<ReaperEntity> {
                 partialTick,
                 15728640,
                 OverlayTexture.NO_OVERLAY,
-                1.0F, 1.0F, 1.0F, 1.0F
+                0xFFFFFFFF
         );
     }
 

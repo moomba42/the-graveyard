@@ -52,34 +52,34 @@ public abstract class HordeGraveyardEntity extends HostileGraveyardEntity {
     public void readAdditionalSaveData(CompoundTag p_33055_) {
         super.readAdditionalSaveData(p_33055_);
         if (p_33055_.contains("PatrolTarget")) {
-            this.patrolTarget = NbtUtils.readBlockPos(p_33055_.getCompound("PatrolTarget"));
+            this.patrolTarget = NbtUtils.readBlockPos(p_33055_.getCompound("PatrolTarget"), "PatrolTarget").orElse(null);
         }
 
         this.patrolLeader = p_33055_.getBoolean("PatrolLeader");
         this.patrolling = p_33055_.getBoolean("Patrolling");
     }
 
-
-    public double getMyRidingOffset() {
-        return -0.45D;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public double getMyRidingOffset() {
+//        return -0.45D;
+//    }
 
     public boolean canBeLeader() {
         return true;
     }
 
-
-    @javax.annotation.Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_33049_, DifficultyInstance p_33050_, MobSpawnType p_33051_, @javax.annotation.Nullable SpawnGroupData p_33052_, @javax.annotation.Nullable CompoundTag p_33053_) {
-        if (p_33051_ != MobSpawnType.PATROL && p_33051_ != MobSpawnType.EVENT && p_33051_ != MobSpawnType.STRUCTURE && this.random.nextFloat() < 0.06F && this.canBeLeader()) {
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        if (spawnType != MobSpawnType.PATROL && spawnType != MobSpawnType.EVENT && spawnType != MobSpawnType.STRUCTURE && this.random.nextFloat() < 0.06F && this.canBeLeader()) {
             this.patrolLeader = true;
         }
 
-        if (p_33051_ == MobSpawnType.PATROL) {
+        if (spawnType == MobSpawnType.PATROL) {
             this.patrolling = true;
         }
 
-        return super.finalizeSpawn(p_33049_, p_33050_, p_33051_, p_33052_, p_33053_);
+        return super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
     }
 
 
@@ -133,7 +133,7 @@ public abstract class HordeGraveyardEntity extends HostileGraveyardEntity {
     public void createWitherRose(@Nullable LivingEntity adversary) {
         if (adversary instanceof ServerPlayer player) {
             if (this.patrolLeader) {
-                TGAdvancements.KILL_HORDE.trigger(player);
+                TGAdvancements.KILL_HORDE.get().trigger(player);
             }
         }
         super.setLastHurtByMob(adversary);

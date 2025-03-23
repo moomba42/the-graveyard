@@ -3,6 +3,7 @@ package com.finallion.graveyard.world.structures;
 import com.finallion.graveyard.config.GraveyardConfig;
 import com.finallion.graveyard.init.TGStructureType;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pools.JigsawPlacement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.pools.alias.PoolAliasLookup;
+import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,8 +31,7 @@ import java.util.Optional;
 
 public class TGJigsawStructure extends Structure {
 
-    //StructureConfigEntry config
-    public static final Codec<TGJigsawStructure> CODEC = RecordCodecBuilder.create(instance ->
+    public static final MapCodec<TGJigsawStructure> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     Structure.StructureSettings.CODEC.forGetter(feature -> feature.config),
                     StructureTemplatePool.CODEC.fieldOf("start_pool").forGetter(config -> config.startPool),
@@ -137,7 +139,10 @@ public class TGJigsawStructure extends Structure {
                 this.size, blockpos,
                 this.useExpansionHack,
                 this.projectStartToHeightmap,
-                this.maxDistanceFromCenter);
+                this.maxDistanceFromCenter,
+                PoolAliasLookup.EMPTY,
+                JigsawStructure.DEFAULT_DIMENSION_PADDING,
+                JigsawStructure.DEFAULT_LIQUID_SETTINGS);
     }
 
     private static boolean canGenerateUnderground(Structure.GenerationContext context, List<String> whitelist, List<String> blacklist) {

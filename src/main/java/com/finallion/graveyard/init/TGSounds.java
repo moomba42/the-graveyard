@@ -1,101 +1,106 @@
 package com.finallion.graveyard.init;
 
 import com.finallion.graveyard.TheGraveyard;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.minecraft.world.item.JukeboxSong;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class TGSounds {
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(ForgeRegistries.SOUND_EVENTS, TheGraveyard.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TheGraveyard.MOD_ID);
 
-    public static final RegistryObject<SoundEvent> LICH_SPAWN = build("entity.lich.spawn");
-    public static final RegistryObject<SoundEvent> LICH_MELEE = build("entity.lich.melee");
-    public static final RegistryObject<SoundEvent> LICH_PHASE_02 = build("entity.lich.phase_two");
-    public static final RegistryObject<SoundEvent> LICH_PHASE_03 = build("entity.lich.phase_three");
-    public static final RegistryObject<SoundEvent> LICH_CORPSE_SPELL = build("entity.lich.corpse_spell");
-    public static final RegistryObject<SoundEvent> LICH_CAST_SKULL = build("entity.lich.shoot_skull");
-    public static final RegistryObject<SoundEvent> LICH_CAST_LEVITATION = build("entity.lich.levitation");
-    public static final RegistryObject<SoundEvent> LICH_CAST_TELEPORT = build("entity.lich.heal");
-    public static final RegistryObject<SoundEvent> LICH_DEATH = build("entity.lich.death");
-    public static final RegistryObject<SoundEvent> LICH_HUNT = build("entity.lich.hunt");
-    public static final RegistryObject<SoundEvent> LICH_SCARE = build("entity.lich.scare");
-    public static final RegistryObject<SoundEvent> LICH_PHASE_03_ATTACK = build("entity.lich.phase_three_attack");
-    public static final RegistryObject<SoundEvent> LICH_IDLE = build("entity.lich.idle");
-    public static final RegistryObject<SoundEvent> LICH_HURT = build("entity.lich.hurt");
+    public static final Supplier<SoundEvent> LICH_SPAWN = registerSoundEvent("entity.lich.spawn");
+    public static final Supplier<SoundEvent> LICH_MELEE = registerSoundEvent("entity.lich.melee");
+    public static final Supplier<SoundEvent> LICH_PHASE_02 = registerSoundEvent("entity.lich.phase_two");
+    public static final Supplier<SoundEvent> LICH_PHASE_03 = registerSoundEvent("entity.lich.phase_three");
+    public static final Supplier<SoundEvent> LICH_CORPSE_SPELL = registerSoundEvent("entity.lich.corpse_spell");
+    public static final Supplier<SoundEvent> LICH_CAST_SKULL = registerSoundEvent("entity.lich.shoot_skull");
+    public static final Supplier<SoundEvent> LICH_CAST_LEVITATION = registerSoundEvent("entity.lich.levitation");
+    public static final Supplier<SoundEvent> LICH_CAST_TELEPORT = registerSoundEvent("entity.lich.heal");
+    public static final Supplier<SoundEvent> LICH_DEATH = registerSoundEvent("entity.lich.death");
+    public static final Supplier<SoundEvent> LICH_HUNT = registerSoundEvent("entity.lich.hunt");
+    public static final Supplier<SoundEvent> LICH_SCARE = registerSoundEvent("entity.lich.scare");
+    public static final Supplier<SoundEvent> LICH_PHASE_03_ATTACK = registerSoundEvent("entity.lich.phase_three_attack");
+    public static final Supplier<SoundEvent> LICH_IDLE = registerSoundEvent("entity.lich.idle");
+    public static final Supplier<SoundEvent> LICH_HURT = registerSoundEvent("entity.lich.hurt");
 
-    public static final RegistryObject<SoundEvent> NAMELESS_HANGED_BREATH = build("entity.nameless_hanged.breath");
-    public static final RegistryObject<SoundEvent> NAMELESS_HANGED_AMBIENT = build("entity.nameless_hanged.ambient");
-    public static final RegistryObject<SoundEvent> NAMELESS_HANGED_INTERACT = build("entity.nameless_hanged.interact");
+    public static final Supplier<SoundEvent> NAMELESS_HANGED_BREATH = registerSoundEvent("entity.nameless_hanged.breath");
+    public static final Supplier<SoundEvent> NAMELESS_HANGED_AMBIENT = registerSoundEvent("entity.nameless_hanged.ambient");
+    public static final Supplier<SoundEvent> NAMELESS_HANGED_INTERACT = registerSoundEvent("entity.nameless_hanged.interact");
 
-    public static final RegistryObject<SoundEvent> CORRUPTED_ILLAGER_AMBIENT = build("entity.corrupted_illager.ambient");
-    public static final RegistryObject<SoundEvent> CORRUPTED_ILLAGER_HURT = build("entity.corrupted_illager.hurt");
-    public static final RegistryObject<SoundEvent> CORRUPTED_ILLAGER_DEATH = build("entity.corrupted_illager.death");
-    public static final RegistryObject<SoundEvent> CORRUPTED_ILLAGER_STEP = build("entity.corrupted_illager.step");
+    public static final Supplier<SoundEvent> CORRUPTED_ILLAGER_AMBIENT = registerSoundEvent("entity.corrupted_illager.ambient");
+    public static final Supplier<SoundEvent> CORRUPTED_ILLAGER_HURT = registerSoundEvent("entity.corrupted_illager.hurt");
+    public static final Supplier<SoundEvent> CORRUPTED_ILLAGER_DEATH = registerSoundEvent("entity.corrupted_illager.death");
+    public static final Supplier<SoundEvent> CORRUPTED_ILLAGER_STEP = registerSoundEvent("entity.corrupted_illager.step");
 
-    public static final RegistryObject<SoundEvent> ACOLYTE_AMBIENT = build("entity.acolyte.ambient");
-    public static final RegistryObject<SoundEvent> ACOLYTE_HURT = build("entity.acolyte.hurt");
-    public static final RegistryObject<SoundEvent> ACOLYTE_DEATH = build("entity.acolyte.death");
+    public static final Supplier<SoundEvent> ACOLYTE_AMBIENT = registerSoundEvent("entity.acolyte.ambient");
+    public static final Supplier<SoundEvent> ACOLYTE_HURT = registerSoundEvent("entity.acolyte.hurt");
+    public static final Supplier<SoundEvent> ACOLYTE_DEATH = registerSoundEvent("entity.acolyte.death");
 
-    public static final RegistryObject<SoundEvent> REAPER_AMBIENT = build("entity.reaper.ambient");
-    public static final RegistryObject<SoundEvent> REAPER_HURT = build("entity.reaper.hurt");
-    public static final RegistryObject<SoundEvent> REAPER_DEATH = build("entity.reaper.death");
-    public static final RegistryObject<SoundEvent> REAPER_CHARGE = build("entity.reaper.charge");
+    public static final Supplier<SoundEvent> REAPER_AMBIENT = registerSoundEvent("entity.reaper.ambient");
+    public static final Supplier<SoundEvent> REAPER_HURT = registerSoundEvent("entity.reaper.hurt");
+    public static final Supplier<SoundEvent> REAPER_DEATH = registerSoundEvent("entity.reaper.death");
+    public static final Supplier<SoundEvent> REAPER_CHARGE = registerSoundEvent("entity.reaper.charge");
 
-    public static final RegistryObject<SoundEvent> GHOUL_ROAR = build("entity.ghoul.roar");
-    public static final RegistryObject<SoundEvent> GHOUL_AMBIENT = build("entity.ghoul.ambient");
-    public static final RegistryObject<SoundEvent> GHOUL_HURT = build("entity.ghoul.hurt");
-    public static final RegistryObject<SoundEvent> GHOUL_DEATH = build("entity.ghoul.death");
-    public static final RegistryObject<SoundEvent> GHOUL_STEP = build("entity.ghoul.step");
+    public static final Supplier<SoundEvent> GHOUL_ROAR = registerSoundEvent("entity.ghoul.roar");
+    public static final Supplier<SoundEvent> GHOUL_AMBIENT = registerSoundEvent("entity.ghoul.ambient");
+    public static final Supplier<SoundEvent> GHOUL_HURT = registerSoundEvent("entity.ghoul.hurt");
+    public static final Supplier<SoundEvent> GHOUL_DEATH = registerSoundEvent("entity.ghoul.death");
+    public static final Supplier<SoundEvent> GHOUL_STEP = registerSoundEvent("entity.ghoul.step");
 
-    public static final RegistryObject<SoundEvent> GHOULING_GROAN = build("entity.ghouling.groan");
-    public static final RegistryObject<SoundEvent> GHOULING_AMBIENT = build("entity.ghouling.ambient");
-    public static final RegistryObject<SoundEvent> GHOULING_HURT = build("entity.ghouling.hurt");
-    public static final RegistryObject<SoundEvent> GHOULING_DEATH = build("entity.ghouling.death");
-    public static final RegistryObject<SoundEvent> GHOULING_ATTACK = build("entity.ghouling.attack");
-    public static final RegistryObject<SoundEvent> GHOULING_STEP = build("entity.ghouling.step");
-    public static final RegistryObject<SoundEvent> GHOULING_SPAWN = build("entity.ghouling.spawn");
+    public static final Supplier<SoundEvent> GHOULING_GROAN = registerSoundEvent("entity.ghouling.groan");
+    public static final Supplier<SoundEvent> GHOULING_AMBIENT = registerSoundEvent("entity.ghouling.ambient");
+    public static final Supplier<SoundEvent> GHOULING_HURT = registerSoundEvent("entity.ghouling.hurt");
+    public static final Supplier<SoundEvent> GHOULING_DEATH = registerSoundEvent("entity.ghouling.death");
+    public static final Supplier<SoundEvent> GHOULING_ATTACK = registerSoundEvent("entity.ghouling.attack");
+    public static final Supplier<SoundEvent> GHOULING_STEP = registerSoundEvent("entity.ghouling.step");
+    public static final Supplier<SoundEvent> GHOULING_SPAWN = registerSoundEvent("entity.ghouling.spawn");
 
-    public static final RegistryObject<SoundEvent> REVENANT_AMBIENT = build("entity.revenant.ambient");
-    public static final RegistryObject<SoundEvent> REVENANT_HURT = build("entity.revenant.hurt");
-    public static final RegistryObject<SoundEvent> REVENANT_DEATH = build("entity.revenant.death");
-    public static final RegistryObject<SoundEvent> REVENANT_STEP = build("entity.revenant.step");
+    public static final Supplier<SoundEvent> REVENANT_AMBIENT = registerSoundEvent("entity.revenant.ambient");
+    public static final Supplier<SoundEvent> REVENANT_HURT = registerSoundEvent("entity.revenant.hurt");
+    public static final Supplier<SoundEvent> REVENANT_DEATH = registerSoundEvent("entity.revenant.death");
+    public static final Supplier<SoundEvent> REVENANT_STEP = registerSoundEvent("entity.revenant.step");
 
-    public static final RegistryObject<SoundEvent> NIGHTMARE_AMBIENT = build("entity.nightmare.ambient");
-    public static final RegistryObject<SoundEvent> NIGHTMARE_HURT = build("entity.nightmare.hurt");
-    public static final RegistryObject<SoundEvent> NIGHTMARE_DEATH = build("entity.nightmare.death");
+    public static final Supplier<SoundEvent> NIGHTMARE_AMBIENT = registerSoundEvent("entity.nightmare.ambient");
+    public static final Supplier<SoundEvent> NIGHTMARE_HURT = registerSoundEvent("entity.nightmare.hurt");
+    public static final Supplier<SoundEvent> NIGHTMARE_DEATH = registerSoundEvent("entity.nightmare.death");
 
-    public static final RegistryObject<SoundEvent> WRAITH_AMBIENT = build("entity.wraith.ambient");
-    public static final RegistryObject<SoundEvent> WRAITH_HURT = build("entity.wraith.hurt");
+    public static final Supplier<SoundEvent> WRAITH_AMBIENT = registerSoundEvent("entity.wraith.ambient");
+    public static final Supplier<SoundEvent> WRAITH_HURT = registerSoundEvent("entity.wraith.hurt");
 
-    public static final RegistryObject<SoundEvent> ALTAR_AMBIENT = build("block.altar.ambient");
+    public static final Supplier<SoundEvent> ALTAR_AMBIENT = registerSoundEvent("block.altar.ambient");
 
-    public static final RegistryObject<SoundEvent> COFFIN_OPEN = build("block.coffin.open");
-    public static final RegistryObject<SoundEvent> COFFIN_CLOSE = build("block.coffin.close");
+    public static final Supplier<SoundEvent> COFFIN_OPEN = registerSoundEvent("block.coffin.open");
+    public static final Supplier<SoundEvent> COFFIN_CLOSE = registerSoundEvent("block.coffin.close");
 
-    public static final RegistryObject<SoundEvent> URN_OPEN = build("block.urn.open");
-    public static final RegistryObject<SoundEvent> URN_CLOSE = build("block.urn.close");
+    public static final Supplier<SoundEvent> URN_OPEN = registerSoundEvent("block.urn.open");
+    public static final Supplier<SoundEvent> URN_CLOSE = registerSoundEvent("block.urn.close");
 
-    public static final RegistryObject<SoundEvent> OSSUARY_OPEN = build("block.ossuary.open");
+    public static final Supplier<SoundEvent> OSSUARY_OPEN = registerSoundEvent("block.ossuary.open");
 
-    public static final RegistryObject<SoundEvent> SARCOPHAGUS_USE = build("block.sarcophagus.use");
+    public static final Supplier<SoundEvent> SARCOPHAGUS_USE = registerSoundEvent("block.sarcophagus.use");
 
-    public static final RegistryObject<SoundEvent> BONE_PLACED = build("block.bone.placed");
-    public static final RegistryObject<SoundEvent> BONE_AMBIENT = build("block.bone.ambient");
-
-
-    public static final RegistryObject<SoundEvent> VIAL_SPLASH = build("item.vial.splash");
-
-    public static final RegistryObject<SoundEvent> LICH_THEME_01 = build("entity.lich.theme_01");
+    public static final Supplier<SoundEvent> BONE_PLACED = registerSoundEvent("block.bone.placed");
+    public static final Supplier<SoundEvent> BONE_AMBIENT = registerSoundEvent("block.bone.ambient");
 
 
-    private static RegistryObject<SoundEvent> build(String id) {
-        return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(TheGraveyard.MOD_ID, id)));
+    public static final Supplier<SoundEvent> VIAL_SPLASH = registerSoundEvent("item.vial.splash");
+
+    public static final Supplier<SoundEvent> LICH_THEME_01 = registerSoundEvent("entity.lich.theme_01");
+    public static final ResourceKey<JukeboxSong> LICH_THEME_01_KEY = createSong("incarnated_evil");
+
+    private static ResourceKey<JukeboxSong> createSong(String name) {
+        return ResourceKey.create(Registries.JUKEBOX_SONG, ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, name));
     }
 
-
-    public static void init() {
+    private static DeferredHolder<SoundEvent, SoundEvent> registerSoundEvent(String name) {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(TheGraveyard.MOD_ID, name);
+        return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
-
 }

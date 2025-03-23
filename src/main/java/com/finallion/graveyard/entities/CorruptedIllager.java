@@ -25,6 +25,8 @@ import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 
+import javax.annotation.Nullable;
+
 public abstract class CorruptedIllager extends HordeGraveyardEntity {
 
     public CorruptedIllager(EntityType<? extends CorruptedIllager> entityType, Level world, String name) {
@@ -45,10 +47,11 @@ public abstract class CorruptedIllager extends HordeGraveyardEntity {
         this.goalSelector.addGoal(10, new LookAtPlayerGoal(this, Mob.class, 8.0F));
     }
 
-    @Override
-    public MobType getMobType() {
-        return MobType.ILLAGER;
-    }
+    // TODO: Reintroduce this
+//    @Override
+//    public MobType getMobType() {
+//        return MobType.ILLAGER;
+//    }
 
     public boolean canAttack(LivingEntity p_186270_) {
         return p_186270_ instanceof AbstractVillager && p_186270_.isBaby() ? false : super.canAttack(p_186270_);
@@ -86,26 +89,15 @@ public abstract class CorruptedIllager extends HordeGraveyardEntity {
         }
     }
 
-
-    @javax.annotation.Nullable
-    public SpawnGroupData finalizeSpawn(ServerLevelAccessor p_34297_, DifficultyInstance p_34298_, MobSpawnType p_34299_, @javax.annotation.Nullable SpawnGroupData p_34300_, @javax.annotation.Nullable CompoundTag p_34301_) {
-        RandomSource randomSource = p_34297_.getRandom();
-        p_34300_ = super.finalizeSpawn(p_34297_, p_34298_, p_34299_, p_34300_, p_34301_);
+    @Override
+    public SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        RandomSource randomSource = level.getRandom();
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         ((GroundPathNavigation)this.getNavigation()).setCanOpenDoors(true);
-        this.populateDefaultEquipmentSlots(randomSource, p_34298_);
-        this.populateDefaultEquipmentEnchantments(randomSource, p_34298_);
+        this.populateDefaultEquipmentSlots(randomSource, difficulty);
+        this.populateDefaultEquipmentEnchantments(level, randomSource, difficulty);
 
-        return p_34300_;
-    }
-
-    public boolean isAlliedTo(Entity p_33314_) {
-        if (super.isAlliedTo(p_33314_)) {
-            return true;
-        } else if (p_33314_ instanceof LivingEntity && ((LivingEntity)p_33314_).getMobType() == MobType.ILLAGER) {
-            return this.getTeam() == null && p_33314_.getTeam() == null;
-        } else {
-            return false;
-        }
+        return spawnGroupData;
     }
 
 
@@ -118,15 +110,16 @@ public abstract class CorruptedIllager extends HordeGraveyardEntity {
             super(illager, 1.0D, false);
         }
 
-        @Override
-        protected double getAttackReachSqr(LivingEntity p_25556_) {
-            if (this.mob.getVehicle() instanceof Ravager) {
-                float f = this.mob.getVehicle().getBbWidth() - 0.1F;
-                return (double)(f * 2.0F * f * 2.0F + p_25556_.getBbWidth());
-            } else {
-                return super.getAttackReachSqr(p_25556_);
-            }
-        }
+        // TODO: Reintroduce this
+//        @Override
+//        protected double getAttackReachSqr(LivingEntity entity) {
+//            if (this.mob.getVehicle() instanceof Ravager) {
+//                float f = this.mob.getVehicle().getBbWidth() - 0.1F;
+//                return f * 2.0F * f * 2.0F + entity.getBbWidth();
+//            } else {
+//                return super.getAttackReachSqr(entity);
+//            }
+//        }
     }
 
     public enum State {

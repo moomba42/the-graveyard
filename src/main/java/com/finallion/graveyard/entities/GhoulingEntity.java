@@ -1,6 +1,10 @@
 package com.finallion.graveyard.entities;
 
-import com.finallion.graveyard.entities.ai.goals.*;
+import com.finallion.graveyard.entities.ai.goals.AttackWithOwnerGoal;
+import com.finallion.graveyard.entities.ai.goals.FollowOwnerGoal;
+import com.finallion.graveyard.entities.ai.goals.GhoulingMeleeAttackGoal;
+import com.finallion.graveyard.entities.ai.goals.SitGoal;
+import com.finallion.graveyard.entities.ai.goals.TrackOwnerAttackerGoal;
 import com.finallion.graveyard.init.TGAdvancements;
 import com.finallion.graveyard.init.TGBlocks;
 import com.finallion.graveyard.init.TGParticles;
@@ -10,6 +14,8 @@ import com.finallion.graveyard.util.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
@@ -44,18 +50,21 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoEntity;
-import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.AnimatableManager;
-import software.bernie.geckolib.core.animation.Animation;
-import software.bernie.geckolib.core.animation.AnimationController;
-import software.bernie.geckolib.core.animation.RawAnimation;
-import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.animation.Animation;
+import software.bernie.geckolib.animation.AnimationController;
+import software.bernie.geckolib.animation.PlayState;
+import software.bernie.geckolib.animation.RawAnimation;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.ArrayList;
@@ -120,16 +129,16 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
                 .add(Attributes.FOLLOW_RANGE, 35.0D);
     }
 
-
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(ANIMATION, ANIMATION_IDLE);
-        this.entityData.define(STAFF, ItemStack.EMPTY);
-        this.entityData.define(ATTACK_ANIM_TIMER, 0);
-        this.entityData.define(COFFIN, false);
-        this.entityData.define(SPAWN_TIMER, 0);
-        this.entityData.define(TELEPORT_TIMER, 0);
-        this.entityData.define(VARIANT, (byte)0);
+    @Override
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ANIMATION, ANIMATION_IDLE);
+        builder.define(STAFF, ItemStack.EMPTY);
+        builder.define(ATTACK_ANIM_TIMER, 0);
+        builder.define(COFFIN, false);
+        builder.define(SPAWN_TIMER, 0);
+        builder.define(TELEPORT_TIMER, 0);
+        builder.define(VARIANT, (byte)0);
         //this.dataTracker.startTracking(CAN_COLLECT, false);
     }
 
@@ -234,7 +243,7 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
 
         if (getTeleportTimer() > 0) {
             if (getTeleportTimer() == 10) {
-                playSound(SoundEvents.SOUL_ESCAPE, 2.0F, -10.0F);
+                playSound(SoundEvents.SOUL_ESCAPE.value(), 2.0F, -10.0F);
             }
             MathUtil.createParticleCircle(level(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D, 1.5F, TGParticles.GRAVEYARD_SOUL_PARTICLE.get(), level().random, 0.5F);
             MathUtil.createParticleCircle(level(), this.getX(), this.getY(), this.getZ(), 0.0D, 0.0D, 0.0D, 1.5F, ParticleTypes.SOUL_FIRE_FLAME, level().random, 0.5F);
@@ -307,7 +316,7 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
                     this.setItemSlot(EquipmentSlot.OFFHAND, new ItemStack(itemStack.getItem()));
                     if (inventory == null) {
                         this.playSound(SoundEvents.CHEST_CLOSE, 1.0F, -5.0F);
-                        TGAdvancements.EQUIP_COFFIN.trigger((ServerPlayer) player);
+                        TGAdvancements.EQUIP_COFFIN.get().trigger((ServerPlayer) player);
                         inventory = new SimpleContainer(54);
                         this.setHasCoffin(true);
                     }
@@ -395,9 +404,10 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
                 if (this.inventory != null) {
                     for (int i = 0; i < this.inventory.getContainerSize(); i++) {
                         ItemStack stack = this.inventory.getItem(i);
-                        if (!stack.isEmpty() && !EnchantmentHelper.hasVanishingCurse(stack)) {
+                        if (!stack.isEmpty() && !EnchantmentHelper.has(stack, EnchantmentEffectComponents.PREVENT_EQUIPMENT_DROP)) {
                             this.spawnAtLocation(stack);
                         }
+
                     }
                 }
             }
@@ -446,12 +456,12 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
         nbt.putByte("ghoulVariant", getVariant());
         //nbt.put("Ghouling", this.writeNbt(new NbtCompound()));
         if (getStaff() != null) {
-            nbt.put("Staff", getStaff().save(new CompoundTag()));
+            nbt.put("Staff", getStaff().save(this.registryAccess()));
         }
         if (inventory != null) {
             final ListTag inv = new ListTag();
             for (int i = 0; i < this.inventory.getContainerSize(); i++) {
-                inv.add(inventory.getItem(i).save(new CompoundTag()));
+                inv.add(inventory.getItem(i).save(this.registryAccess()));
             }
             nbt.put("Inventory", inv);
         }
@@ -463,13 +473,13 @@ public class GhoulingEntity extends GraveyardMinionEntity implements GeoEntity, 
         this.setHasCoffin(nbt.getBoolean("CoffinGhouling"));
         this.setVariant(nbt.getByte("ghoulVariant"));
         if (nbt.contains("Staff")) {
-            setStaff(ItemStack.of(nbt.getCompound("Staff")));
+            setStaff(ItemStack.parseOptional(this.registryAccess(), nbt.getCompound("Staff")));
         }
         if (nbt.contains("Inventory")) {
             final ListTag inv = nbt.getList("Inventory", 10);
             inventory = new SimpleContainer(inv.size());
             for (int i = 0; i < inv.size(); i++) {
-                inventory.setItem(i, ItemStack.of(inv.getCompound(i)));
+                inventory.setItem(i, ItemStack.parseOptional(this.registryAccess(), inv.getCompound(i)));
             }
         }
     }

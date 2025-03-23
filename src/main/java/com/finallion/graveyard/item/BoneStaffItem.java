@@ -4,6 +4,8 @@ import com.finallion.graveyard.entities.GhoulingEntity;
 import com.finallion.graveyard.entities.GraveyardMinionEntity;
 import com.finallion.graveyard.init.TGEntities;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -63,108 +66,133 @@ public class BoneStaffItem extends Item {
         Other way: a NBT to the player with its Ghoulings UUID ?
          */
 
-        if (player != null && !world.isClientSide()) {
-            // TAG OWNER UUID CHECK
-            /* Does the OwnerUUID in the NBT match the user of the staff*/
-            if (stack.getTag() != null && stack.getTag().contains("OwnerUUID")) {
-                if (stack.getTag().getUUID("OwnerUUID").compareTo(player.getUUID()) != 0) {
-                    return InteractionResult.PASS;
-                }
+        if (player == null || world.isClientSide()) {
+            return super.useOn(context);
+        }
+
+        // TAG OWNER UUID CHECK
+        /* Does the OwnerUUID in the NBT match the user of the staff*/
+        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+        CompoundTag tag = customData == null ? null : customData.copyTag();
+
+        if (tag != null && tag.contains("OwnerUUID")) {
+            if (tag.getUUID("OwnerUUID").compareTo(player.getUUID()) != 0) {
+                return InteractionResult.PASS;
             }
+        }
 
-            /* Is the Ghouling with the UUID saved in the NBT still alive?*/
-            if (stack.getTag() != null && stack.getTag().contains("GhoulingUUID")) {
-                if (ownerGhoulingMapping.containsKey(stack.getTag().getUUID("GhoulingUUID"))) {
-                    return InteractionResult.PASS;
-                }
+        /* Is the Ghouling with the UUID saved in the NBT still alive?*/
+        if (tag != null && tag.contains("GhoulingUUID")) {
+            if (ownerGhoulingMapping.containsKey(tag.getUUID("GhoulingUUID"))) {
+                return InteractionResult.PASS;
             }
+        }
 
-            /*
-            If owner match and Ghouling dead, summon new one
-            - Create new NBT
-            - Pass data to Ghouling
-            - Save Owner-Ghouling in Map
-             */
-            GhoulingEntity ghouling = TGEntities.GHOULING.get().create(world);
-            ghouling.moveTo(blockPos.above(), 0.0F, 0.0F);
-            ghouling.setOwner(player);
-            ghouling.setVariant(ghoulVariant);
+        /*
+         * If owner match and Ghouling dead, summon new one
+         * - Create new NBT
+         * - Pass data to Ghouling
+         * - Save Owner-Ghouling in Map
+         */
+        GhoulingEntity ghouling = TGEntities.GHOULING.get().create(world);
+        ghouling.moveTo(blockPos.above(), 0.0F, 0.0F);
+        ghouling.setOwner(player);
+        ghouling.setVariant(ghoulVariant);
 
-            /* TAG INPUTS BOUND TO ITEM STACK */
-            stack.getOrCreateTag().putUUID("GhoulingUUID", ghouling.getUUID());
-
-            if (!stack.getTag().contains("OwnerUUID")) {
-                stack.getOrCreateTag().putUUID("OwnerUUID", player.getUUID());
+        /* TAG INPUTS BOUND TO ITEM STACK */
+        if(customData == null) {
+            tag = new CompoundTag();
+            tag.putUUID("OwnerUUID", player.getUUID());
+            tag.putUUID("GhoulingUUID", ghouling.getUUID());
+            customData = CustomData.of(tag);
+            stack.applyComponents(DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, customData).build());
+            player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.spawn"), true);
+        } else {
+            tag = customData.copyTag();
+            tag.putUUID("GhoulingUUID", ghouling.getUUID());
+            if(!tag.contains("OwnerUUID")) {
+                tag.putUUID("OwnerUUID", player.getUUID());
                 player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.spawn"), true);
             } else {
                 player.displayClientMessage(Component.translatable("entity.graveyard.ghouling.respawn"), true);
             }
-
-
-            /* END TAG INPUT */
-            ownerGhoulingMapping.putIfAbsent(ghouling.getUUID(), player.getUUID());
-
-            ghouling.setStaff(stack); // pass stack to ghouling
-            ghouling.onSummoned();
-            world.addFreshEntity(ghouling);
-            return InteractionResult.SUCCESS;
+            customData = CustomData.of(tag);
+            stack.applyComponents(DataComponentPatch.builder().set(DataComponents.CUSTOM_DATA, customData).build());
         }
 
-        return super.useOn(context);
+        /* END TAG INPUT */
+        ownerGhoulingMapping.putIfAbsent(ghouling.getUUID(), player.getUUID());
+
+        ghouling.setStaff(stack); // pass stack to ghouling
+        ghouling.onSummoned();
+        world.addFreshEntity(ghouling);
+        return InteractionResult.SUCCESS;
     }
 
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        if (world.isClientSide) {
+            return super.use(world, user, hand);
+        }
+
         ItemStack stack = user.getMainHandItem();
-        CompoundTag nbt = stack.getTag();
-        if (!world.isClientSide) {
-            if (nbt != null && nbt.contains("GhoulingUUID") && nbt.contains("OwnerUUID")) {
-                if (user.getUUID().compareTo(nbt.getUUID("OwnerUUID")) != 0) { // case wrong owner
-                    user.displayClientMessage(Component.translatable("entity.graveyard.ghouling.obey"), true);
-                    return InteractionResultHolder.fail(stack);
-                } else {
-                    UUID ghoulingUUID = nbt.getUUID("GhoulingUUID");
-                    GhoulingEntity ghouling = world.getEntitiesOfClass(GhoulingEntity.class, user.getBoundingBox().inflate(100), Objects::nonNull).stream().filter(entity -> entity.getUUID().compareTo(ghoulingUUID) == 0).findFirst().orElse(null);
-                    if (ghouling != null) {
-                        if (user.isCrouching()) {
-                            ghouling.setTarget(null);
-                            ghouling.setAggressive(false);
-                            ghouling.setTeleportTimer(15);
-                            ghouling.teleportTo(user.getX(), user.getY(), user.getZ());
-                        } else {
-                            Predicate<Entity> predicate = entity -> {
-                                if (entity instanceof LivingEntity) {
-                                    if (entity instanceof TamableAnimal tameableEntity) {
-                                        if (tameableEntity.getOwnerUUID() != null) {
-                                            return tameableEntity.getOwnerUUID().compareTo(nbt.getUUID("OwnerUUID")) != 0;
-                                        }
-                                    } else if (entity instanceof GraveyardMinionEntity minion) {
-                                        if (minion.getOwnerUuid() != null) {
-                                            return minion.getOwnerUuid().compareTo(nbt.getUUID("OwnerUUID")) != 0;
-                                        }
-                                    }
-                                    return true;
-                                }
-                                return false;
-                            };
-                            int distance = 100;
-                            Vec3 start = user.getEyePosition();
-                            Vec3 rot = user.getViewVector(1.0F).scale(distance);
-                            Vec3 end = start.add(rot);
-                            AABB box = user.getBoundingBox().expandTowards(rot).inflate(1.0D);
-                            HitResult result = ProjectileUtil.getEntityHitResult(user, start, end, box, predicate, distance * distance);
-                            if (result != null && result.getType() == HitResult.Type.ENTITY) {
-                                Entity entity = ((EntityHitResult) result).getEntity();
-                                if (entity instanceof LivingEntity livingEntity) {
-                                    ghouling.setTarget(livingEntity);
-                                    ghouling.setAggressive(true);
-                                    ghouling.setSitting(false);
-                                }
-                            }
-                        }
+        CustomData customData = stack.getComponents().get(DataComponents.CUSTOM_DATA);
+        if(customData == null) {
+            return super.use(world, user, hand);
+        }
+
+        CompoundTag nbt = customData.copyTag();
+        if (!nbt.contains("GhoulingUUID") || !nbt.contains("OwnerUUID")) {
+            return super.use(world, user, hand);
+        }
+
+        if (user.getUUID().compareTo(nbt.getUUID("OwnerUUID")) != 0) { // case wrong owner
+            user.displayClientMessage(Component.translatable("entity.graveyard.ghouling.obey"), true);
+            return InteractionResultHolder.fail(stack);
+        }
+
+        UUID ghoulingUUID = nbt.getUUID("GhoulingUUID");
+        GhoulingEntity ghouling = world.getEntitiesOfClass(GhoulingEntity.class, user.getBoundingBox().inflate(100), Objects::nonNull).stream().filter(entity -> entity.getUUID().compareTo(ghoulingUUID) == 0).findFirst().orElse(null);
+        if (ghouling == null) {
+            return super.use(world, user, hand);
+        }
+
+        if (user.isCrouching()) {
+            ghouling.setTarget(null);
+            ghouling.setAggressive(false);
+            ghouling.setTeleportTimer(15);
+            ghouling.teleportTo(user.getX(), user.getY(), user.getZ());
+            return super.use(world, user, hand);
+        }
+
+        Predicate<Entity> predicate = entity -> {
+            if (entity instanceof LivingEntity) {
+                if (entity instanceof TamableAnimal tameableEntity) {
+                    if (tameableEntity.getOwnerUUID() != null) {
+                        return tameableEntity.getOwnerUUID().compareTo(nbt.getUUID("OwnerUUID")) != 0;
+                    }
+                } else if (entity instanceof GraveyardMinionEntity minion) {
+                    if (minion.getOwnerUuid() != null) {
+                        return minion.getOwnerUuid().compareTo(nbt.getUUID("OwnerUUID")) != 0;
                     }
                 }
+                return true;
+            }
+            return false;
+        };
+        int distance = 100;
+        Vec3 start = user.getEyePosition();
+        Vec3 rot = user.getViewVector(1.0F).scale(distance);
+        Vec3 end = start.add(rot);
+        AABB box = user.getBoundingBox().expandTowards(rot).inflate(1.0D);
+        HitResult result = ProjectileUtil.getEntityHitResult(user, start, end, box, predicate, distance * distance);
+        if (result != null && result.getType() == HitResult.Type.ENTITY) {
+            Entity entity = ((EntityHitResult) result).getEntity();
+            if (entity instanceof LivingEntity livingEntity) {
+                ghouling.setTarget(livingEntity);
+                ghouling.setAggressive(true);
+                ghouling.setSitting(false);
             }
         }
 

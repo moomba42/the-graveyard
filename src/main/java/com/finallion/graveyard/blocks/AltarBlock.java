@@ -16,7 +16,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Difficulty;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +43,7 @@ public class AltarBlock extends Block {
 
     public AltarBlock(BlockBehaviour.Properties settings) {
         super(settings);
-        this.registerDefaultState((BlockState)((BlockState)((BlockState)this.stateDefinition.any()).setValue(BLOODY, false)));
+        this.registerDefaultState(this.stateDefinition.any().setValue(BLOODY, false));
     }
 
     @Override
@@ -77,9 +77,8 @@ public class AltarBlock extends Block {
     }
 
     @Override
-    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult p_60508_) {
-        ItemStack stack = player.getItemInHand(hand);
-
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+        Level world = player.level();
         float blood = 0.0F;
         if (stack.is(TGItems.VIAL_OF_BLOOD.get())) {
             blood = VialOfBlood.getBlood(stack);
@@ -110,13 +109,13 @@ public class AltarBlock extends Block {
                     BlockPos corner = pos.offset(-8, 0, -8);
 
                     // searches square around altar
-                    for(int i = 0; i < 16; ++i) {
-                        for(int j = 0; j < 16; ++j) {
-                            for(int k = 0; k < 2;++k) {
+                    for (int i = 0; i < 16; ++i) {
+                        for (int j = 0; j < 16; ++j) {
+                            for (int k = 0; k < 2; ++k) {
                                 BlockPos iteratorPos = new BlockPos(corner.offset(i, k, j));
                                 BlockState blockState = world.getBlockState(iteratorPos);
 
-                                if (blockState.getBlock() instanceof OminousBoneStaffFragment) {
+                                if (blockState.getBlock() instanceof OminousBoneStaffFragmentBlock) {
                                     world.setBlock(iteratorPos, Blocks.AIR.defaultBlockState(), 3);
                                 }
                             }
@@ -128,7 +127,7 @@ public class AltarBlock extends Block {
                     lich.setYHeadRot(direction.getOpposite().toYRot());
                     lich.setYBodyRot(direction.getOpposite().toYRot());
                     lich.setYRot(direction.getOpposite().toYRot());
-                    lich.moveTo((double)blockPos.getX() + 0.5D, (double)blockPos.getY() + 0.55D, (double)blockPos.getZ() + 0.5D, 0.0F, 0.0F);
+                    lich.moveTo((double) blockPos.getX() + 0.5D, (double) blockPos.getY() + 0.55D, (double) blockPos.getZ() + 0.5D, 0.0F, 0.0F);
                     lich.onSummoned(direction.getOpposite(), pos.above());
 
 
@@ -137,18 +136,17 @@ public class AltarBlock extends Block {
                     }
 
 
-
                     world.addFreshEntity(lich);
                     lich.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, 5));
 
-                    return InteractionResult.CONSUME;
+                    return ItemInteractionResult.CONSUME;
                 }
 
-                return InteractionResult.sidedSuccess(player.level().isClientSide);
+                return ItemInteractionResult.sidedSuccess(player.level().isClientSide);
             }
         }
 
 
-        return super.use(state, world, pos, player, hand, p_60508_);
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }
