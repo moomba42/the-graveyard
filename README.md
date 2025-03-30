@@ -1,3 +1,13 @@
+# The Graveyard - Resurrected
+
+This mod is a continuation of the popular mod called "The Graveyard". The reason for the creation of the fork was lack of updates from the original developer. This mod aims to maintain the amazing work that has been done in the original mod so that people can continue to experience it in newer versions of Minecraft. I may add new content in the future.
+
+Here is the link to the original mod: https://www.curseforge.com/minecraft/mc-mods/the-graveyard-forge and its github repository, where this version was forked from: https://github.com/finallion/The-Graveyard-FORGE
+
+Do not submit issues with this fork to the original repository. Instead, report the issues on this fork.
+
+Below is the original README of the graveyard mod:
+
 # Welcome to the Graveyard Wiki!
 
 ## Forge:
